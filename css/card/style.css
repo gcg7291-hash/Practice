@@ -1,0 +1,12 @@
+.box {
+  height: 100px;
+  width: 10%;
+  background-color: lightgray;
+  position: sticky;
+}
+
+.box-1 {
+  background-color: white;
+  position: sticky;
+  border-radius: 10px;
+}

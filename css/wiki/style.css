@@ -1,0 +1,32 @@
+h1 {
+  font-size: 1rem;
+  background-color: lightgrey;
+  padding: 2%;
+  position: relative;
+  left: 10px;
+  margin-right: 100px;
+}
+
+.line {
+  padding-bottom: 8rem lightgray;
+  border-bottom: 0.1rem lightgray solid;
+  position: relative;
+  left: 40px;
+  margin-right: 100px;
+}
+
+.line-1 {
+  border-top: 0.1rem gray solid;
+  background-color: lightgray;
+  padding: 100px;
+  text-align: center;
+  position: relative;
+  left: 40px;
+  margin-right: 100px;
+}
+
+.main {
+  position: relative;
+  left: 40px;
+  margin-right: 100px;
+}
