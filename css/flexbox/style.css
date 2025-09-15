@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.flex-container {
+  display: flex;
+  margin: auto;
+  width: 80vw;
+  height: 80vh;
+  border: 2px dashed #000;
+}
+.box {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  border-radius: 0.5rem;
+}
+.box-1 {
+  background-color: #60a5fa;
+}
+.box-2 {
+  background-color: #f87171;
+}
+.box-3 {
+  background-color: #34d399;
+}
+.box-4 {
+  background-color: #facc15;
+}
