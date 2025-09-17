@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GameGo</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
+      :root {
+        --dark-bg: #1a1c2c;
+        --dark-card: #2b2f45;
+        --dark-text: #e0e0e0;
+        --primary-color: #5a5e82;
+        --accent-color: #6c7094;
+      }
+
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background-color: var(--dark-bg);
+        color: var(--dark-text);
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--dark-text);
+      }
+
+      .nav-menu ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-menu a {
+        color: var(--dark-text);
+        text-decoration: none;
+        font-weight: 400;
+      }
+
+      .nav-right a {
+        color: var(--dark-text);
+        text-decoration: none;
+        margin-left: 20px;
+      }
+
+      /* Hero Section */
+      .hero {
+        position: relative;
+        height: 350px;
+        background-color: var(--dark-card);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.7;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 40px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 100%;
+      }
+
+      .hero-text h1 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .hero-text p {
+        font-size: 16px;
+        color: #ccc;
+      }
+
+      .hero-text .dot-nav {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background-color: #555;
+        border-radius: 50%;
+      }
+
+      .dot.active {
+        background-color: #fff;
+      }
+
+      .hero-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .hero-buttons button {
+        padding: 12px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .btn-main {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+      }
+
+      /* Main Content */
+      .main-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 20px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .notice-board {
+        background-color: var(--dark-card);
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .notice-board table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .notice-board th,
+      .notice-board td {
+        text-align: left;
+        padding: 10px;
+        border-bottom: 1px solid #3a3e54;
+      }
+
+      .notice-board tr:last-child td {
+        border-bottom: none;
+      }
+
+      .notice-board th {
+        color: #999;
+      }
+
+      .notice-board td a {
+        color: var(--dark-text);
+        text-decoration: none;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .card {
+        background-color: var(--dark-card);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 150px;
+      }
+
+      .card .placeholder {
+        width: 100px;
+        height: 80px;
+        background-color: #444;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      .card h3 {
+        font-size: 16px;
+        text-align: center;
+        margin: 0;
+      }
+
+      .card p {
+        font-size: 14px;
+        color: #aaa;
+        text-align: center;
+        margin: 5px 0 0;
+      }
+
+      /* Footer */
+      .footer {
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .footer a {
+        color: #666;
+        text-decoration: none;
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">GameGo</div>
+        <nav class="nav-menu">
+          <ul>
+            <li><a href="#">공지사항</a></li>
+            <li><a href="#">게임정보</a></li>
+            <li><a href="#">커뮤니티</a></li>
+            <li><a href="#">게임랭킹</a></li>
+            <li><a href="#">상점</a></li>
+          </ul>
+        </nav>
+        <div class="nav-right">
+          <a href="#">프로필</a>
+          <a href="#">로그아웃</a>
+          <a href="#">고객센터</a>
+        </div>
+      </header>
+
+      <section class="hero">
+        <img
+          class="hero-image"
+          src="https://via.placeholder.com/1200x350"
+          alt="Hero Image"
+        />
+        <div class="hero-content">
+          <div class="hero-text">
+            <h1>새로운 게임 출시</h1>
+            <p>
+              향상된 기능과 업데이트된 퀘스트, 플레이어 최신 게임 정보를 확인해
+              보세요.
+            </p>
+            <div class="dot-nav">
+              <span class="dot active"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+          </div>
+          <div class="hero-buttons">
+            <button class="btn-main">게임 시작</button>
+            <button class="btn-secondary">⚹ 다운로드</button>
+          </div>
+        </div>
+      </section>
+
+      <main class="main-content">
+        <div class="notice-board">
+          <h2 class="section-title">공지사항</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>제목</th>
+                <th>날짜</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="#">게임 업데이트</a></td>
+                <td>2023-11-15</td>
+              </tr>
+              <tr>
+                <td><a href="#">서버 점검</a></td>
+                <td>2023-11-10</td>
+              </tr>
+              <tr>
+                <td><a href="#">새로운 이벤트</a></td>
+                <td>2023-11-05</td>
+              </tr>
+              <tr>
+                <td><a href="#">커뮤니티 업데이트</a></td>
+                <td>2023-10-30</td>
+              </tr>
+              <tr>
+                <td><a href="#">버그 수정</a></td>
+                <td>2023-10-15</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <aside class="sidebar">
+          <div class="card">
+            <div class="placeholder"></div>
+            <h3>게임 정보</h3>
+            <p>모든 최신 게임 정보를 확인하세요.</p>
+          </div>
+          <div class="card">
+            <div class="placeholder"></div>
+            <h3>신규/복귀 가이드</h3>
+            <p>새로운 가이드 라인을 확인하세요.</p>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <p>
+          <a href="#">회사소개</a> | <a href="#">이용약관</a> |
+          <a href="#">개인정보 처리방침</a> |
+          <a href="#">게임 등급 안내</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
