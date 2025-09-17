@@ -48,9 +48,7 @@ boolean
 // "상품: 노트북, 가격: 1,200,000원" 형식으로 출력한다
 const productName = "노트북";
 const prouductPrice = 1200000;
-const pr = "상품:";
-const price = "가격:";
-console.log(pr + productName + price + prouductPrice);
+console.log("상품:" + productName + "가격:" + prouductPrice);
 
 /* 출력 결과
 상품: 노트북, 가격: 1,200,000원
