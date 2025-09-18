@@ -230,6 +230,8 @@ if (purchaseAmount > 100000) {
     } `
   );
 }
+let purchaseAmount1 = 150000;
+let finalPrice;
 
 /* 출력 결과
 구매 금액: 150000
@@ -307,3 +309,4 @@ if (dirnkType === "coffee" && userAge3 >= 18) {
 /* 출력 결과
 음료수만 가능
 */
+ 
