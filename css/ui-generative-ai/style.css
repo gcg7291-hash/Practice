@@ -34,10 +34,9 @@
   color: white;
   font-weight: bold;
   background-color: rgb(83, 88, 102);
-  justify-content: center;
-  align-items: flex-end;
-  
+  justify-content: space-between;
   margin: 10px;
+  width: 100px;
 }
 .circle-m {
   display: flex;
