@@ -87,7 +87,11 @@ console.log("-----");
 // for 반복문을 활용해서 start부터 end까지의 숫자를 출력한다
 let start = 5;
 let end = 10;
+let count = 0;
 for (let i = start; i <= 10; i++) {
+  if (i % 2 === 0) {
+    count++;
+  }
   console.log(i);
 }
 /* 출력 결과
