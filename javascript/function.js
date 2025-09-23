@@ -189,7 +189,12 @@ let result9 = maxArrow("a", "b");
 8
 b
 */
+console.log("---")
+setTimeout(() => {
+  console.log("3000ms 후 실행");
+}, 3000);
 
+console.log("---")
 // TODO: 두 숫자 사이의 합 반환 함수
 // 두 숫자를 인자로 전달해서 두 숫자 사이의 합을 반환(return)하는 함수를 구현한다
 // 반복문을 활용한다
