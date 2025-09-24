@@ -1,8 +1,8 @@
+import axios from "axios";
+const BASE_URL = `https://dummyjson.com`;
+
 const terminalWidth = process.stdout.columns;
 const border = "=".repeat(terminalWidth);
-
-import axios from "axios";
-const BASE_URL = "https://dummyjson.com/";
 
 // TODO: 모든 장바구니 목록 조회(Get all carts)
 // 아래 요구사항을 참고하여 코드를 작성한다
@@ -12,7 +12,7 @@ const BASE_URL = "https://dummyjson.com/";
 async function getAllcarts() {
   const res = await axios.get(`${BASE_URL}/carts`);
   const data = res.data;
-  console.log(data);
+  console.log(data.carts);
 }
 getAllcarts();
 /* 출력 결과
@@ -56,19 +56,17 @@ console.log(border);
 // 아래 요구사항을 참고하여 코드를 작성한다
 // 1. 10번 장바구니 조회(Get a single cart) 요청
 // 2. 응답 데이터 객체 출력
-
-async function getAsinglecart(n) {
-  const res = await axios.get(`${BASE_URL}/carts/${10}`);
+async function getAscarts(n) {
+  const res = await axios.get(`${BASE_URL}/carts/${n}`);
   const data = res.data;
   console.log(data);
 }
-getAsinglecart(10);
-
+getAscarts(10);
 /* 출력 결과
 {
   id: 10,
   products: [
-    { 
+    {
       id: 190,
       title: 'IWC Ingenieur Automatic Steel',
       price: 4999.99,
@@ -102,13 +100,12 @@ console.log(border);
 // 아래 요구사항을 참고하여 코드를 작성한다
 // 1. 10번 장바구니 조회(Get a single cart) 요청
 // 2. 응답 데이터 객체에서 상품의 수(total products) 데이터 출력
-async function totalProducts(search) {
-  const queryParams = new URLSearchParams({ q: search });
-  const res = await axios.get(`${BASE_URL}/carts/1/search?${queryParams}`);
-  const data = res.data;
-  console.log(data.totalProducts);
+async function ttProduct(n) {
+  const res = await axios.get(`${BASE_URL}/carts/${n}`);
+  const ttproduct = res.data.totalProducts;
+  console.log(ttproduct);
 }
-totalProducts();
+ttProduct(10);
 /* 출력 결과
 2
 */
@@ -118,13 +115,12 @@ console.log(border);
 // 아래 요구사항을 참고하여 코드를 작성한다
 // 1. 10번 장바구니 조회(Get a single cart) 요청
 // 2. 응답 데이터 객체에서 상품의 목록(products) 배열 데이터 출력
-async function singleProducts() {
-  const res = await axios.get(`${BASE_URL}/carts/10`);
-  const data = res.data;
-  console.log(data.products);
+async function arProduct(n) {
+  const res = await axios.get(`${BASE_URL}/carts/${n}`);
+  const aaProduct = res.data.products;
+  console.log(aaProduct);
 }
-singleProducts();
-
+arProduct(10);
 /* 출력 결과
 [
   {
@@ -157,14 +153,13 @@ console.log(border);
 // 2. 응답 데이터 객체에서 상품의 목록(products) 배열 데이터 추출
 // 3. map() 메서드를 활용해서 배열 데이터에서 상품의 이름만 모아서 새로운 배열 생성
 // 4. 상품의 이름만 모은 배열 출력
-
-async function tenProducts() {
-  const res = await axios.get(`${BASE_URL}/carts/10`);
-  const data = res.data;
-  const values = data.products.map((product) => product.title);
+async function nProduct(n) {
+  const res = await axios.get(`${BASE_URL}/carts/${n}`);
+  const nnProduct = res.data.products;
+  const values = nnProduct.map((product) => product.title);
   console.log(values);
 }
-tenProducts();
+nProduct(10);
 
 /* 출력 결과
 [
