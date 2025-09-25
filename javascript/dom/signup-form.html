@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- tailwindcss CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <div class="p-8">
+      <form id="signupForm">
+        <!-- 이메일 입력 -->
+        <div>
+          <label class="block text-sm mb-4">
+            이메일
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="w-full px-3 py-2 border"
+              placeholder="example@email.com"
+              required
+            />
+            <div id="emailError" class="text-red-500 text-sm mt-1"></div>
+          </label>
+        </div>
+
+        <!-- 비밀번호 입력 -->
+        <div>
+          <label for="password" class="block text-sm mb-4">
+            비밀번호
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="w-full px-3 py-2 border"
+              placeholder="8자 이상 입력해주세요"
+              required
+            />
+            <div id="passwordError" class="text-red-500 text-sm mt-1"></div>
+          </label>
+        </div>
+
+        <!-- 비밀번호 확인 입력 -->
+        <div>
+          <label for="confirmPassword" class="block text-sm mb-4">
+            비밀번호 확인
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              class="w-full px-3 py-2 border"
+              placeholder="비밀번호를 다시 입력해주세요"
+            />
+
+            <div
+              id="confirmPasswordError"
+              class="text-red-500 text-sm mt-1"
+            ></div>
+          </label>
+        </div>
+
+        <!-- 제출 버튼 -->
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4">
+          회원가입
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // TODO: 회원가입 폼 유효성 검사
+      // 요구사항: form을 제출할 때 아래 과정을 통해 유효성 검사를 수행한다
+      // 1. 각 에러 메시지는 제출을 할 때 마다 빈 문자열로 초기화
+      // 2. 이메일을 입력 하지 않으면 #emailError 요소에 에러 메시지 "이메일을 입력해주세요" 설정
+      // 3. 비밀번호를 입력 하지 않으면 #passwordError 요소에 에러 메시지 "비밀번호를 입력해주세요" 설정
+      // 4. 비밀번호 확인을 입력 하지 않으면 #confirmPasswordError 요소에 에러 메시지 "비밀번호 확인을 입력해주세요" 설정
+      // 5. 비밀번호가 8 글자 이상이 아니면 #passwordError 요소에 에러 메시지 "8자 이상 입력해주세요" 설정
+      // 6. 비밀번호와 비밀번호 확인의 값이 다르면 #confirmPasswordError 요소에 에러 메시지 "비밀번호가 일치하지 않습니다" 설정
+
+      // const emailE = document.querySelector("#emailError");
+      // const passE = document.querySelector("#passwordError");
+      // const confirmP = document.querySelector("#confimPasswordError");
+
+      // // emailE.addEventListener("input", () => {
+      // //   emailError["textContent"] = "";
+      // // });
+      // // passE.addEventListener("input", () => {
+      // //   passwordError["textContent"] = "";
+      // // });
+      // // confirmP.addEventListener("input", () => {
+      // //   confimPasswordError["textContent"] = "";
+      // // });
+
+      // const formTag = document.querySelector("#signupForm");
+      // formTag.addEventListener("submit", (event) => {
+      //   event.preventDefault();
+      //   const eI = formTag["elements"]["email"]["value"];
+      //   const pE = formTag["elements"]["password"]["vlaue"];
+      //   const cP = formTag["elements"]["confirmPassword"]["value"];
+
+      //   if (eI["value"] === "") {
+      //     eI["textContent"] = "이메일을 입력하세요";
+      //   }
+      //   if (pE["length"]["value"] < 8) {
+      //     pE["textContent"] = "8자 이상 입력해주세요";
+      //   } else if (pE.length === "") {
+      //     pE["textContent"] = "비밀번호를 입력해주세요";
+      //   }
+      //   if (cP["vlaue"] === "") {
+      //     cP["textContent"] = "비밀번호 확인을 입력해주세요";
+      //   } else if (cP["value"] !== pE["value"]) {
+      //     cp["txtContent"] = "비밀번호가 일치하지 않습니다.";
+      //   }
+      // });
+
+      const emailError = document.querySelector("#emailError");
+      const passwordError = document.querySelector("#passwordError");
+      const confirmPasswordError = document.querySelector(
+        "#confirmPasswordError"
+      );
+
+      const formTag = document.querySelector("#singupForm");
+      formTag.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = formTag["elements"]["email"];
+        const password = formTag["elements"]["password"];
+        const confirmPassword = formTag["elements"]["confirmPassword"];
+        if (password["lenght"]["elements"]["password"]["vlaue"] < 8) {
+          passwordError["textContent"] = "8자 이상 입력해주세요";
+        } else if (password["vlaue"]["lenght"]["elements"]["password"] === "") {
+          passwordError["textContent"] = "비밀번호를 입력하세요";
+        }
+        if (confirmPassword["value"]["lenght"]["elements"]["password"] === "") {
+          confirmPasswordError["textContent"] = "비밀번호 확인을 입력해주세요";
+        } else if (
+          confirmPassword["value"]["lenght"]["elements"]["password"] !==
+          password["value"]["lenght"]["elements"]["password"]
+        ) {
+          confirmPasswordError["textContent"] = "비밀번호가 일치하지 않습니다.";
+        }
+        if (email["value"]["lenght"]["elements"] === "") {
+          emailError["textContent"] = "이메일을 입력하세요";
+        }
+      });
+    </script>
+  </body>
+</html>
