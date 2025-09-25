@@ -37,23 +37,22 @@ const BASE_URL = "https://dummyjson.com";
   }
 ]
  */
-
 // TODO: ID가 10인 상품(Product) 조회 후 리뷰(reviews)의 평균 점수(rating) 출력
 // 아래 요구사항을 참고하여 코드를 작성한다
 // 1. ID가 10인 상품(Product) 조회 요청
 // 2. 응답 데이터 객체에서 리뷰(reviews) 배열 추출
 // 3. 리뷰(reviews) 배열에 포함된 점수(rating)로 평균 점수(rating) 계산 후 출력
-// async function ProtId(ppId) {
-//   const res = await axios.get(`${BASE_URL}/products/${ppId}`);
-//   const product = res["data"];
-//   const reviews = product["reviews"];
-//   if (reviews && reviews.length > 0) {
-//     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-//     const averageRating = totalRating / reviews.length;
-//     console.log(`${ppId}${averageRating.toFixed(2)}`);
-//   }
-// }
-// ProtId(10);
+async function ProtId(ppId) {
+  const res = await axios.get(`${BASE_URL}/products/${ppId}`);
+  const product = res["data"];
+  const reviews = product["reviews"];
+  if (reviews && reviews.length > 0) {
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalRating / reviews.length;
+    console.log(`${ppId}${averageRating.toFixed(2)}`);
+  }
+}
+ProtId(10);
 
 /* 출력 결과
 3.3333333333333335
@@ -63,13 +62,13 @@ const BASE_URL = "https://dummyjson.com";
 // 아래 요구사항을 참고하여 코드를 작성한다
 // 1. 게시글(posts) 태그(tag list) 목록 조회 요청
 // 2. 응답 데이터를 출력한다
-// async function postTaglist() {
-//   const pl = `${BASE_URL}/posts/tag-list`;
-//   const res = await axios.get(pl);
-//   const list = res["data"];
-//   console.log(list);
-// }
-// postTaglist();
+async function postTaglist() {
+  const pl = `${BASE_URL}/posts/tag-list`;
+  const res = await axios.get(pl);
+  const list = res["data"];
+  console.log(list);
+}
+postTaglist();
 
 /* 출력 결과
 [
