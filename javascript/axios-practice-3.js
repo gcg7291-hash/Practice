@@ -153,10 +153,12 @@ async function comAll() {
   const res = await axios.get(`${BASE_URL}/comments`);
   const comments = res.data.comments;
   const formattedComments = comments.map((comment) => {
+    const { body, likes, username } = comment;
     return {
-      body: comment.body,
-      likes: comment.likes,
-      username: comment.user.username,
+      body, likes, username
+      // body: comment.body,
+      // likes: comment.likes,
+      // username: comment.user.username,
     };
   });
 
