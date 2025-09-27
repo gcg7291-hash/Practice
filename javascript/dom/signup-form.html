@@ -76,70 +76,33 @@
       // 4. 비밀번호 확인을 입력 하지 않으면 #confirmPasswordError 요소에 에러 메시지 "비밀번호 확인을 입력해주세요" 설정
       // 5. 비밀번호가 8 글자 이상이 아니면 #passwordError 요소에 에러 메시지 "8자 이상 입력해주세요" 설정
       // 6. 비밀번호와 비밀번호 확인의 값이 다르면 #confirmPasswordError 요소에 에러 메시지 "비밀번호가 일치하지 않습니다" 설정
-
-      // const emailE = document.querySelector("#emailError");
-      // const passE = document.querySelector("#passwordError");
-      // const confirmP = document.querySelector("#confimPasswordError");
-
-      // // emailE.addEventListener("input", () => {
-      // //   emailError["textContent"] = "";
-      // // });
-      // // passE.addEventListener("input", () => {
-      // //   passwordError["textContent"] = "";
-      // // });
-      // // confirmP.addEventListener("input", () => {
-      // //   confimPasswordError["textContent"] = "";
-      // // });
-
-      // const formTag = document.querySelector("#signupForm");
-      // formTag.addEventListener("submit", (event) => {
-      //   event.preventDefault();
-      //   const eI = formTag["elements"]["email"]["value"];
-      //   const pE = formTag["elements"]["password"]["vlaue"];
-      //   const cP = formTag["elements"]["confirmPassword"]["value"];
-
-      //   if (eI["value"] === "") {
-      //     eI["textContent"] = "이메일을 입력하세요";
-      //   }
-      //   if (pE["length"]["value"] < 8) {
-      //     pE["textContent"] = "8자 이상 입력해주세요";
-      //   } else if (pE.length === "") {
-      //     pE["textContent"] = "비밀번호를 입력해주세요";
-      //   }
-      //   if (cP["vlaue"] === "") {
-      //     cP["textContent"] = "비밀번호 확인을 입력해주세요";
-      //   } else if (cP["value"] !== pE["value"]) {
-      //     cp["txtContent"] = "비밀번호가 일치하지 않습니다.";
-      //   }
-      // });
-
       const emailError = document.querySelector("#emailError");
       const passwordError = document.querySelector("#passwordError");
       const confirmPasswordError = document.querySelector(
         "#confirmPasswordError"
       );
+      const formTag = document.querySelector("#signupForm");
 
-      const formTag = document.querySelector("#singupForm");
       formTag.addEventListener("submit", (event) => {
         event.preventDefault();
-        const email = formTag["elements"]["email"];
-        const password = formTag["elements"]["password"];
-        const confirmPassword = formTag["elements"]["confirmPassword"];
-        if (password["lenght"]["elements"]["password"]["vlaue"] < 8) {
-          passwordError["textContent"] = "8자 이상 입력해주세요";
-        } else if (password["vlaue"]["lenght"]["elements"]["password"] === "") {
-          passwordError["textContent"] = "비밀번호를 입력하세요";
+
+        const email = formTag["elements"]["email"]["value"];
+        const password = formTag["elements"]["password"]["value"];
+        const confirmPassword = formTag["elements"]["confirmPassword"]["value"];
+        if (email === "") {
+          emailError["textContent"] = "이메일을 입력해주세요";
         }
-        if (confirmPassword["value"]["lenght"]["elements"]["password"] === "") {
+        if (password["length"]["value"] < 8) {
+          passwordError["textContent"] = "8자 이상 입력해주세요";
+        } else if (password["length"]["value"] === "") {
+          passwordError["textContent"] = "비밀번호를 입력해주세요";
+        }
+        if (confirmPassword === "") {
           confirmPasswordError["textContent"] = "비밀번호 확인을 입력해주세요";
         } else if (
-          confirmPassword["value"]["lenght"]["elements"]["password"] !==
-          password["value"]["lenght"]["elements"]["password"]
+          confirmPassword["value"]["length"] !== password["value"]["length"]
         ) {
-          confirmPasswordError["textContent"] = "비밀번호가 일치하지 않습니다.";
-        }
-        if (email["value"]["lenght"]["elements"] === "") {
-          emailError["textContent"] = "이메일을 입력하세요";
+          confirmPasswordError["txtContent"] = "비밀번호가 일치하지 않습니다.";
         }
       });
     </script>
