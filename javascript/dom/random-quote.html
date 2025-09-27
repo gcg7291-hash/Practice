@@ -21,71 +21,26 @@
       </ul>
     </div>
     <script>
-      // TODO: 랜덤 인용문 요청하고 응답 데이터 화면에 출력하기
-      // 아래 요구사항을 만족하는 getQuoteButton 의 클릭(click) 이벤트 핸들러 함수를 완성한다
-      // 1. 버튼을 클릭할 때 마다 랜덤 인용문 데이터 API 요청
-      // 2. li 요소 생성하고 변수에 할당
-      // 3. li 요소에 클래스(class) "text-lg mt-2" 설정
-      // 4. 응답 데이터의 인용문구(quote)를 li 요소의 텍스트(textContent)로 설정
-      // 5. 완성한 li 요소를 quotesUl(ul 요소)에 추가
-      // const getQuoteButton = document.querySelector("#get-quote");
-      // const quotesUl = document.querySelector("#quotes");
-      // getQuoteButton.addEventListener("click", async () => {
-      //   event.preventDefault();
-      //   const BASE_URL = "https://dummyjson.com/quotes/random";
-      //   const config = {
-      //     url: BASE_URL,
-      //     method: "get",
-      //   };
-      //   const response = await axios(config);
-      //   const data = response["data"];
-      //   console.log(data);
-      //   const nLi = document.createElement("li");
-      //   nLi.classList.add("text-lg", "mt-2");
-      //   nLi["textContent"] = "data";
-      //   radomQuotesulList.appendChild(nLi);
-      // });
-      // getQuote();
-
-      // TODO: 랜덤 인용문 요청하고 응답 데이터 화면에 출력하기
-      // 아래 요구사항을 만족하는 getQuoteButton 의 클릭(click) 이벤트 핸들러 함수를 완성한다
-      // 1. 버튼을 클릭할 때 마다 랜덤 인용문 데이터 API 요청
-      // 2. li 요소 생성하고 변수에 할당
-      // 3. li 요소에 클래스(class) "text-lg mt-2" 설정
-      // 4. 응답 데이터의 인용문구(quote)를 li 요소의 텍스트(textContent)로 설정
-      // 5. 완성한 li 요소를 quotesUl(ul 요소)에 추가
       const getQuoteButton = document.querySelector("#get-quote");
       const quotesUl = document.querySelector("#quotes");
 
-      async function getQuoteButton() {
-        const config = { url: "dummyjson.com/quotes/random", method: "get" };
-        const res = await axios(config);
-        const data = res["data"];
-        const nLi = document.createElement("li");
-        nLi.classList.add("text-lg", "mt-2");
-        nLi["textContent"] = "data";
-        console.log(data);
-      }
-      radomQuotesulList.appendChild(nLi);
-      getQuoteButton.addEventListener("click", () => {
-        getQuoteButton();
+      // TODO: 랜덤 인용문 요청하고 응답 데이터 화면에 출력하기
+      // 아래 요구사항을 만족하는 getQuoteButton 의 클릭(click) 이벤트 핸들러 함수를 완성한다
+      // 1. 버튼을 클릭할 때 마다 랜덤 인용문 데이터 API 요청
+      // 2. li 요소 생성하고 변수에 할당
+      // 3. li 요소에 클래스(class) "text-lg mt-2" 설정
+      // 4. 응답 데이터의 인용문구(quote)를 li 요소의 텍스트(textContent)로 설정
+      // 5. 완성한 li 요소를 quotesUl(ul 요소)에 추가
+
+      getQuoteButton.addEventListener("click", async () => {
+        // 아래 코드 작성
+        const res = await axios.get("https://dummyjson.com/quotes/random");
+        const randData = res.data;
+        const liTag = document.createElement("li");
+        liTag["className"] = "text-lg mt-2";
+        liTag["textContent"] = randData["quote"];
+        quotesUl.appendChild(liTag);
       });
-
-      // const getQuoteButton = document.querySelector("#get-quote");
-      // const quotesUl = document.querySelector("#quotes");
-
-      // getQuoteButton.addEventListener("click", async () => {
-      //   const response = await axios.get(
-      //     "https://api.example.com/quotes/random"
-      //   );
-      //   const data = await response.json();
-
-      //   const li = document.createElement("li");
-      //   li.classList.add("text-lg", "mt-2");
-      //   li.textContent = data.quote;
-
-      //   quotesUl.appendChild(li);
-      // });
     </script>
   </body>
 </html>
