@@ -3,14 +3,16 @@
 // 함수명: greet (함수 선언식), greetArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
-function greet(문자열) {
-  console.log(`안녕하세요, ${문자열}님!`);
+function greet() {
+  console.log(`안녕하세요, ${"김철수"}님!`);
+  console.log(`안녕하세요, ${"이영희"}님!`);
 }
-// 화살표 함수 정의 코드
-const greetArrow = (문자열) => {
-  console.log(`안녕하세요, ${문자열}님!`);
-};
 
+// 화살표 함수 정의 코드
+const greetArrow = () => {
+  console.log(`안녕하세요, ${"김철수"}님!`);
+  console.log(`안녕하세요, ${"이영희"}님!`);
+};
 // 함수 호출 코드
 greet("김철수");
 greetArrow("이영희");
@@ -25,15 +27,13 @@ greetArrow("이영희");
 // 함수명: multiply (함수 선언식), multiplyArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
-function multiply(result1) {
-  return 4 * 6;
+function multiply(a, b) {
+  return a * b;
 }
-
 // 화살표 함수 정의 코드
-const multiplyArrow = (result2) => {
-  return 7 * 8;
+const multiplyArrow = (a, b) => {
+  return a * b;
 };
-
 // 함수 호출 코드
 let result1 = multiply(4, 6);
 console.log(result1); // 24
@@ -51,13 +51,14 @@ console.log(result2); // 56
 // 함수명: square (함수 선언식), squareArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
-function square(result3) {
-  return 5 * 5;
+function square(a) {
+  return a * a;
 }
 // 화살표 함수 정의 코드
-const squareArrow = (result4) => {
-  return 8 * 8;
+const squareArrow = (a) => {
+  return a * a;
 };
+
 // 함수 호출 코드
 let result3 = square(5);
 console.log(result3);
@@ -82,12 +83,11 @@ function printFromOne(a) {
   }
 }
 // 화살표 함수 정의 코드
-const printFromOneArrow = (b) => {
-  for (let i = 0; i < b; i++) {
+const printFromOneArrow = (a) => {
+  for (let i = 0; i < a; i++) {
     console.log(i + 1);
   }
 };
-
 // 함수 호출 코드
 printFromOne(5);
 
@@ -120,24 +120,21 @@ printFromOneArrow(10);
 // 함수명: sum (함수 선언식), sumArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
-function sum(c) {
-  result1 = 0;
-
-  for (let i = 0; i < c; i++) {
-    result1 += i + 1;
+function sum(a) {
+  let total = 0;
+  for (let i = 1; i <= a; i++) {
+    total += i;
   }
-
-  return result1;
+  return total;
 }
+
 // 화살표 함수 정의 코드
-const sumArrow = (d) => {
-  result2 = 0;
-
-  for (let i = 0; i < d; i++) {
-    result2 += i + 1;
+const sumArrow = (a) => {
+  let total = 0;
+  for (let i = 1; i <= a; i++) {
+    total += i;
   }
-
-  return result2;
+  return total;
 };
 
 // 함수 호출 코드
@@ -153,27 +150,26 @@ console.log(result6);
 */
 
 // TODO: 더 큰 수 반환 함수
-// 두 데이터를 인자로 전달해서 크기를 비교해서 더 큰 데이터를 반환(return)하는 함수를 구현한다
+// 두 데이터를 인자로 전달해서 크기를 비교한 데이터를 반환(return)하는 함수를 구현한다
 // 두 데이터가 같으면 둘 중 아무거나 반환한다
 // 함수명: max (함수 선언식), maxArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
 
-function max(j, k) {
-  if (j < k) {
-  } else if (j > k) {
-  } else {
+function max(a, b) {
+  if (a > b) {
+    return a;
+  } else if (a < b) {
+    return b;
   }
-  return k;
 }
-
 // 화살표 함수 정의 코드
-const maxArrow = (j, k) => {
-  if (j > k) {
-  } else if (j < k) {
-  } else {
+const maxArrow = (a, b) => {
+  if (a > b) {
+    return a;
+  } else if (a < b) {
+    return b;
   }
-  return j;
 };
 // 함수 호출 코드
 let result7 = max(5, 10);
@@ -183,43 +179,35 @@ let result8 = maxArrow(8, 1);
 console.log(result8);
 
 let result9 = maxArrow("a", "b");
+console.log(result9);
 
 /* 출력 결과
 10
 8
 b
 */
-console.log("---")
-setTimeout(() => {
-  console.log("3000ms 후 실행");
-}, 3000);
 
-console.log("---")
 // TODO: 두 숫자 사이의 합 반환 함수
 // 두 숫자를 인자로 전달해서 두 숫자 사이의 합을 반환(return)하는 함수를 구현한다
 // 반복문을 활용한다
 // 함수명: sumBetween (함수 선언식), sumBetweenArrow (화살표 함수)
 
 // 함수 선언식 정의 코드
-
 function sumBetween(a, b) {
-  let sum = 0;
-  for (let k = a; k <= b; k++) {
-    sum = sum + k;
+  let total = 0;
+  for (let i = a; i <= b; i++) {
+    total += i;
   }
-  return sum;
+  return total;
 }
-console.log(sum);
 // 화살표 함수 정의 코드
 const sumBetweenArrow = (a, b) => {
-  let sum = 0;
-  for (let k = a; k <= b; k++) {
-    sum = sum + k;
+  let total = 0;
+  for (let i = a; i <= b; i++) {
+    total += i;
   }
-  return sum;
+  return total;
 };
-console.log(sumBetweenArrow);
-
 // 함수 호출 코드
 let result10 = sumBetween(5, 10);
 console.log(result10);
@@ -247,9 +235,7 @@ function getGrade(a) {
   } else {
     return "D";
   }
-  console.log(a);
 }
-
 // 화살표 함수 정의 코드
 const getGradeArrow = (a) => {
   if (a >= 90) {
@@ -261,8 +247,8 @@ const getGradeArrow = (a) => {
   } else {
     return "D";
   }
-  console.log(a);
 };
+
 // 함수 호출 코드
 let result12 = getGrade(95);
 console.log(result12);
