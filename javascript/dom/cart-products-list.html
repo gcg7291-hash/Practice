@@ -31,39 +31,18 @@
       const cartList = document.querySelector("ul#cartList");
 
       async function getCartProduct() {
-        // 1. 1번 장바구니 조회(Get a single cart) API 요청(실행, 호출)
-        // API  호출하기 위해서는 주소(URL)
         const URL = "https://dummyjson.com/carts/1";
-
-        // axios 호출 설정 객체
-        const config = {
-          url: URL,
-          method: "get",
-        };
-
-        // axios로 API 호출
-        const response = await axios(config);
-
-        // 응답 데이터 속성을 가져오기(추출)
-        const data = response["data"];
+        const res = await axios.get(`${URL}`);
+        const data = res["data"];
         console.log(data);
+        const product = data["products"];
+        console.log(product);
 
-        // 2. 응답 데이터 객체에서 상품의 목록(products) 배열 데이터 추출
-        const products = data["products"];
-        console.log(products);
-
-        // 3. forEach() 활용해서 배열 데이터를 반복, 아래 작업 수행
-        products.forEach((element) => {
-          // 3-1. li 요소를 생성하고, 변수에 할당
+        product.forEach((element) => {
           const liTag = document.createElement("li");
-          // 3-2. li 요소에 클래스(class) "text-lg mt-2" 설정
           liTag["className"] = "text-lg mt-2";
           console.log(element);
-          // 3-3. 상품의 이름(title)을 li 요소의 텍스트(textContent)로 설정
-          // 객체에서 속성 title을 추출
           liTag["textContent"] = element["title"];
-
-          // 3-4. 완성한 li 요소를 cartList(ul 요소)에 추가
           cartList.appendChild(liTag);
         });
       }
