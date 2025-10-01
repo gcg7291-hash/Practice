@@ -7,17 +7,12 @@ import Counter from "./components/Counter/Counter";
 import Calculator from "./components/Calculator/Calcuator";
 import QuoteContainer from "./components/DummyJSON/QuoteContainer";
 import Form from "./components/signup/Form";
+import RecipeContainer from "./components/Recipe/RecipeContainer";
+import ProductContainer from "./components/ProductSort/ProductContainer";
 export default function App() {
   return (
     <div>
-      <StringState></StringState>
-      <NumberState></NumberState>
-      <ObjectState></ObjectState>
-      <ArrayState></ArrayState>
-      <Counter></Counter>
-      <Calculator></Calculator>
-      <QuoteContainer></QuoteContainer>
-      <Form></Form>
+      <ProductContainer></ProductContainer>
     </div>
   );
 }
