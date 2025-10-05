@@ -3,71 +3,77 @@ import axios from "axios";
 import Post from "./Post";
 
 export default function Container() {
-  const [posts, setPosts] = useState([]); // 상품 목록 상태
-  const [skip, setSkip] = useState(0); // 상품 시작 인덱스 상태
-  const LIMIT = 5; // 한 페이지에 표시할 상품 수
-  const aP = 250;
+  const [posts, setPosts] = useState([]); // 게시글 목록 상태
+  const [skip, setSkip] = useState(0); // 게시글 시작 인덱스 상태
+  const LIMIT = 5; // 한 페이지에 표시할 게시글 수
+  const LAST = 250;
 
   useEffect(() => {
     async function fetchPosts() {
       // 적절한 요청 URL을 작성한다
       const response = await axios.get(
-        "https://dummyjson.com/products?limit=5&skip=5"
+        `https://dummyjson.com/posts?limit=${LIMIT}&skip=${skip}`
       );
       setPosts(response["data"]["posts"]);
     }
 
     fetchPosts();
-  }, [skip]);
+  }, [skip]); // 의존성 배열 : useEffect 가 감시하는 데이터
 
   // 적절한 함수를 작성한다
-  const firstPro = () => {
+  function onFirst() {
     setSkip(0);
-  };
-
-  const lastPro = () => {
-    setSkip(aP);
-  };
-
-  const leftP = () => {
+  }
+  function onLast() {
+    setSkip(LAST);
+  }
+  function onPrev() {
     if (skip - LIMIT >= 0) {
       setSkip(skip - LIMIT);
     } else {
-      alert("이젠 페이지가 없습니다.");
+      alert("이전 페이지가 없습니다.");
     }
-  };
-  const rightP = () => {
-    if (skip - LIMIT <= aP) {
+  }
+  function onNext() {
+    if (skip + LIMIT <= LAST) {
       setSkip(skip + LIMIT);
     } else {
-      alert("마지막 페이지 입니다.");
+      alert("다음 페이지가 없습니다.");
     }
-  };
+  }
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="flex gap-2 mb-6">
         <button
           className="bg-gray-500 text-white px-3 py-1 cursor-pointer"
-          onClick={firstPro}
+          onClick={() => {
+            onFirst();
+          }}
         >
           처음으로
         </button>
         <button
           className="bg-blue-500 text-white px-3 py-1 cursor-pointer"
-          onClick={leftP}
+          onClick={() => {
+            onPrev();
+          }}
         >
           이전
         </button>
         <button
           className="bg-blue-500 text-white px-3 py-1 cursor-pointer"
-          onClick={rightP}
+          onClick={() => {
+            onNext();
+          }}
         >
           다음
         </button>
         <button
           className="bg-gray-500 text-white px-3 py-1 cursor-pointer"
-          onClick={lastPro}
+          onClick={() => {
+            onLast();
+          }}
         >
           마지막으로
         </button>
