@@ -36,11 +36,14 @@ try {
 // 함수명: printObject
 // 반환값: 없음
 // 객체(Object) 메서드(keys, values, entries) 사용
-function printObjet(Object) {
-  const keys = Object["key"];
+function printObject(obj) {
+  const keys = Object.keys(obj);
   console.log(keys);
+  const values = Object.values(obj);
+  console.log(values);
+  const entries = Object.entries(obj);
+  console.log(entries);
 }
-
 try {
   printObject({ name: "홍길동", age: 30, city: "서울" });
   /*
@@ -55,6 +58,11 @@ try {
 // 함수명: printArray
 // 반환값: 없음
 // 배열 고차 메서드(forEach) 사용
+function printArray(arr) {
+  arr.forEach((e) => {
+    console.log(e);
+  });
+}
 
 try {
   printArray([1, 2, 3, 4, 5]);
@@ -72,6 +80,13 @@ try {
 // 함수명: printObjectValues
 // 반환값: 없음
 // 구조분해할당 활용
+function printObjectValues(obj) {
+  const { name, age, city } = obj;
+
+  console.log(name);
+  console.log(age);
+  console.log(city);
+}
 
 try {
   printObjectValues({ name: "홍길동", age: 30, city: "서울" });
