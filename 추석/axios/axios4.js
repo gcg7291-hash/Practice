@@ -69,7 +69,23 @@ const API_KEY =
 // 요구사항
 // MOVIES - Details API를 호출하고 응답 객체를 출력한다
 // movie_id: 22
-
+// async function getSingleMovieResponse() {
+//   const config = {
+//     method: "GET",
+//     url: "https://api.themoviedb.org/3/movie/22",
+//     headers: {
+//       "Content-Type": "application/json",
+//       accept: "application/json",
+//       Authorization: `Bearer ${API_KEY}`,
+//     },
+//       params: {
+//       language: "ko-KR",
+//     },
+//   };
+//   const res = await axios(config)
+//   console.log(res["data"])
+// }
+// getSingleMovieResponse()
 /* 출력 결과
 {
   "adult": false,
@@ -149,7 +165,33 @@ const API_KEY =
 // 함수이름 : getNowPlayingTopMoviesResponse
 // 요구사항
 // MOVIE LISTS - Now Playing API를 호출하고 첫 번째 페이지의 영화 목록 중 vote_average가 가장 큰 영화 정보를 출력한다
-
+async function getNowPlayingTopMoviesResponse() {
+  const config = {
+    method: "GET",
+    url: "https://api.themoviedb.org/3/movie/now_playing",
+    headers: {
+      "Content-Type": "application/json",
+      accept: "application/json",
+      Authorization: `Bearer ${API_KEY}`,
+    },
+    params: {
+      language: "ko-KR",
+      page: 1,
+    },
+  };
+  const res = await axios(config);
+  const data = res["data"]["results"];
+  // console.log(data);
+  const topMovie = data.reduce((a, b) => {
+    if (a["vote_average"] < b["vote_average"]) {
+      return b;
+    } else {
+      return a;
+    }
+  });
+  console.log(topMovie);
+}
+getNowPlayingTopMoviesResponse();
 /* 출력 결과
 {
   adult: false,
@@ -160,6 +202,7 @@ const API_KEY =
   original_title: 'チェンソーマン レゼ篇',
   overview: '데블 헌터로 일하는 소년 ‘덴지’는 조직의 배신으로 죽음에 내몰린 순간 전기톱 악마견 ‘포치타’와의 계약으로 하나로 합쳐져 누구도 막을 수 없는 존재 ‘체인소 맨’으로 다시 태어난다. 악마와 사냥꾼, 그리고 정체불명의 적들이 얽힌 잔혹한 전쟁 속에서 ‘레제’라는 이름의 미스터리한 소녀가 ‘덴지’ 앞에 나타나는데… ‘덴지’는 사랑이라는 감정에 이끌려 지금껏 가장 위험한 배틀에 몸을 던진다!',
   popularity: 93.0327,
+
   poster_path: '/Amu0HNWfpxo2ZaulueNVxDLADz8.jpg',
   release_date: '2025-09-19',
   title: '극장판 체인소 맨: 레제편',
