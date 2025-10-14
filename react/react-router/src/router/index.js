@@ -8,7 +8,8 @@ import ProductsList from "../components/ProductsList";
 import PostsList from "../components/PostsList";
 import RootLayout from "../components/layouts/RootLayout";
 import DummyLayout from "../components/layouts/DummyLayout";
-
+import ProductDetail from "../pages/RootPages/DummyPages/ProductDetail";
+import PostDetail from "../pages/RootPages/DummyPages/PostDetail";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
             Component: Products,
           },
         ],
+      },
+      {
+        path: "/posts/:postId",
+        Component: PostDetail,
+      },
+      {
+        path: "/porducts/:productId",
+        Component: ProductDetail,
       },
       {
         path: "productslist",

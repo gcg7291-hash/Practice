@@ -1,36 +1,88 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import ProductsList from "../../../components/ProductsList";
+import { useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Products() {
-  const navigate = useNavigate();
-  const [products, setproducts] = useState([]);
+  const LIMIT = 5;
+  const LAST = 190;
+  const [skip, setSkip] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [product, setProduct] = useState([]);
 
   useEffect(() => {
-    async function getProducts() {
-      const res = await axios.get("https://dummyjson.com/products");
-      const data = res["data"];
-      console.log(data);
-      setproducts(data["products"]);
+    const sortBy = searchParams.get("sortBy") ?? "id";
+    const order = searchParams.get("order") ?? "asc";
+
+    async function getPro() {
+      const res = await axios(
+        `https://dummyjson.com/products?sortBy=${sortBy}&order=${order}&limit=${LIMIT}&skip=${skip}`
+      );
+      setProduct(res.data.products);
     }
-    getProducts();
-  }, []);
+    getPro();
+  }, [searchParams, skip]);
+
+  function onPrev() {
+    if (skip - LIMIT >= 0) {
+      setSkip(skip - LIMIT);
+    } else {
+      alert("이전 페이지가 없습니다.");
+    }
+  }
+  function onNext() {
+    if (skip + LIMIT <= LAST) {
+      setSkip(skip + LIMIT);
+    } else {
+      alert("다음 페이지가 없습니다.");
+    }
+  }
+
   return (
     <div>
-      <h1
-        onClick={() => {
-          alert("ProductsList로 이동합니다");
-          navigate("/ProductsList");
-        }}
+      <button
+        className="border p-1"
+        onClick={() => setSearchParams({ sortBy: "price", order: "asc" })}
       >
-        {products.map((product) => {
+        상품가격 오름차순
+      </button>
+      <button
+        className="border p-1"
+        onClick={() => setSearchParams({ sortBy: "price", order: "desc" })}
+      >
+        상품가격 내림차순
+      </button>
+      <button
+        className="border p-1"
+        onClick={() => setSearchParams({ sortBy: "id", order: "asc" })}
+      >
+        ID 오름
+      </button>
+      <button
+        className="border p-1"
+        onClick={() => setSearchParams({ sortBy: "id", order: "desc" })}
+      >
+        ID 내림
+      </button>
+
+      <li>
+        {product.map((products) => {
           return (
-            <ProductsList product={product}>{product.products}</ProductsList>
+            <Link key={products.id} to={`/products/${products.id}`}>
+              No.{products.id} - {products.title} - {products.price}
+            </Link>
           );
         })}
-      </h1>
+      </li>
+      <div>
+        <button className="border p-1" onClick={onPrev}>
+          이전
+        </button>
+        <button className="border p-1" onClick={onNext}>
+          다음
+        </button>
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function Container() {
   const LIMIT = 5; // 한 페이지에 표시할 게시글 수
   const LAST = 250;
 
-  useEffect(() => {
+  useEffect(() => { 
     async function fetchPosts() {
       // 적절한 요청 URL을 작성한다
       const response = await axios.get(
