@@ -10,7 +10,7 @@ export default function PostDetail() {
   useEffect(() => {
     async function getPost() {
       const res = await axios(`https://dummyjson.com/posts/${postId}`);
-      setPost(res.data.posts);
+      setPost(res.data);
     }
     getPost();
   }, [postId]);
@@ -18,7 +18,7 @@ export default function PostDetail() {
   return (
     <div>
       <p>게시글 id:{postId}</p>
-      <p>게시글{post.title}</p>
+      <p>게시글{post.body}</p>
     </div>
   );
 }

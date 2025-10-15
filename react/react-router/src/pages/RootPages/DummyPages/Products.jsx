@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import PATHS from "../../../constants/paths";
 
 export default function Products() {
   const LIMIT = 5;
-  const LAST = 190;
+  const LAST = 194;
   const [skip, setSkip] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const [product, setProduct] = useState([]);
@@ -69,7 +70,10 @@ export default function Products() {
       <li>
         {product.map((products) => {
           return (
-            <Link key={products.id} to={`/products/${products.id}`}>
+            <Link
+              key={products.id}
+              to={PATHS.ROOT.getProductDetail(products.id)}
+            >
               No.{products.id} - {products.title} - {products.price}
             </Link>
           );

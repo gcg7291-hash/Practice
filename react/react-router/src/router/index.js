@@ -10,55 +10,8 @@ import RootLayout from "../components/layouts/RootLayout";
 import DummyLayout from "../components/layouts/DummyLayout";
 import ProductDetail from "../pages/RootPages/DummyPages/ProductDetail";
 import PostDetail from "../pages/RootPages/DummyPages/PostDetail";
-const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: RootLayout,
-    children: [
-      {
-        index: true,
-        Component: Home,
-      },
-      {
-        path: "/dummy",
-        Component: DummyLayout,
-        children: [
-          {
-            path: "carts",
-            Component: Carts,
-          },
-          {
-            path: "posts",
-            Component: Posts,
-          },
-          {
-            path: "products",
-            Component: Products,
-          },
-        ],
-      },
-      {
-        path: "/posts/:postId",
-        Component: PostDetail,
-      },
-      {
-        path: "/porducts/:productId",
-        Component: ProductDetail,
-      },
-      {
-        path: "productslist",
-        Component: ProductsList,
-      },
-      {
-        path: "cartslist",
-        Component: CartsList,
-      },
-      {
-        path: "postslist",
-        Component: PostsList,
-      },
-    ],
-  },
-]);
+import rootRoutes from "./routes/rootRoutes";
+
+const router = createBrowserRouter([...rootRoutes]);
 
 export default router;

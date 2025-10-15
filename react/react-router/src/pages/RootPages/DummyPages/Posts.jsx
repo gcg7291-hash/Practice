@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
-
+import PATHS from "../../../constants/paths";
 export default function Posts() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,7 +81,7 @@ export default function Posts() {
       </button>
       {posts.map((post) => {
         return (
-          <Link key={post.id} to={`/posts/${post.id}`}>
+          <Link key={post.id} to={PATHS.ROOT.getPostDetail(post.id)}>
             No.{post.id} - {post.title}
           </Link>
         );
