@@ -16,7 +16,7 @@ const counterSlice = createSlice({
       state.count = state.count - state.step;
     },
     setStep: (state, action) => {
-      state.count = Number(action.payload);
+      state.step = Number(action.payload);
     },
   },
 });

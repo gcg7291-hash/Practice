@@ -7,7 +7,7 @@ export default function CountDecrement() {
   // 전역 상태 count 감소 로직을 위한 코드
   // ...
   const dispatch = useDispatch();
-  const step = useSelector((state) => state.counter.step);
+  const step = useSelector((state) => state.counter.count);
   function handleDecrement() {
     // 전역 상태 count 감소 로직
     // ...
