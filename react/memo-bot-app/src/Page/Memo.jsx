@@ -39,7 +39,9 @@ const MemoConfirmation = ({ structuredMemo, onSave, onCancel }) => {
         </p>
         <p className="flex justify-between items-start">
           <strong className="text-blue-200 min-w-[70px]">내용</strong>
-          <span className="text-right flex-1 break-words">{structuredMemo.content}</span>
+          <span className="text-right flex-1 break-words">
+            {structuredMemo.content}
+          </span>
         </p>
         <p className="flex justify-between items-center">
           <strong className="text-blue-200 min-w-[70px]">마감일</strong>
@@ -47,7 +49,13 @@ const MemoConfirmation = ({ structuredMemo, onSave, onCancel }) => {
         </p>
         <p className="flex justify-between items-center">
           <strong className="text-blue-200 min-w-[70px]">중요도</strong>
-          <span className={`text-right ${getPriorityColor(structuredMemo.priority)}`}>{structuredMemo.priority}</span>
+          <span
+            className={`text-right ${getPriorityColor(
+              structuredMemo.priority
+            )}`}
+          >
+            {structuredMemo.priority}
+          </span>
         </p>
         <p className="flex justify-between items-center">
           <strong className="text-blue-200 min-w-[70px]">카테고리</strong>
@@ -94,7 +102,7 @@ export default function Memo() {
 
     if (isLoading || prompt.trim() === "") return;
 
-    setStructuredMemo(null); 
+    setStructuredMemo(null);
 
     setMessages((prev) => [...prev, { role: "user", content: prompt }]);
 
@@ -129,7 +137,7 @@ export default function Memo() {
 
       setMessages((prev) => [...prev, { role: "ai", content: aiText }]);
     } catch (error) {
-      console.error("AI 응답 생성 오류:", error); 
+      console.error("AI 응답 생성 오류:", error);
 
       const errorMessage =
         error.response?.data?.error ||
@@ -171,17 +179,16 @@ export default function Memo() {
   };
 
   return (
-    // ⭐️ 전체 컨테이너: 모바일에서는 꽉 채우고(h-full), PC에서는 최대 너비와 높이를 제한합니다.
+    // ⭐️ 전체 컨테이너: 모바일에서 꽉 채우기 (min-h-screen 대신 h-full 사용 가능)
     <div className="min-h-screen bg-slate-900 text-gray-100 flex flex-col items-center justify-center p-4">
-      {/* ⭐️ 채팅 박스: 모바일에서는 h-full, PC에서는 고정 높이 h-[600px] */}
-      <div className="w-full max-w-3xl flex flex-col h-[calc(100vh-2rem)] md:h-[650px] bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-        
+      {/* ⭐️ 채팅 박스: 모바일 최적화를 위해 높이 조정 */}
+      <div className="w-full max-w-3xl flex flex-col h-[calc(100vh-6rem)] md:h-[650px] bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
         {/* 메시지 목록 영역 */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 rounded-t-xl space-y-4">
           <MessageList messages={messages} />
-          
+
           {/* 메모 확인 UI */}
-          {structuredMemo && structuredMemo.title !== '답변 불가' && (
+          {structuredMemo && structuredMemo.title !== "답변 불가" && (
             <MemoConfirmation
               structuredMemo={structuredMemo}
               onSave={handleCreateMemo}
@@ -189,9 +196,9 @@ export default function Memo() {
             />
           )}
         </div>
-        
+
         {/* 채팅 입력 폼 영역 */}
-        <div className="p-4 bg-gray-700/70 border-t border-gray-700 rounded-b-xl shadow-inner shadow-gray-900/50">
+        <div className="p-2 bg-gray-700/70 border-t border-gray-700 rounded-b-xl shadow-inner shadow-gray-900/50">
           <ChatForm
             prompt={prompt}
             setPrompt={setPrompt}
