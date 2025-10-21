@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       message: message,
     });
     
-    // ⭐️ 2. 응답 텍스트를 JSON으로 파싱
+    
     const parsedData = JSON.parse(response.text);
 
     // ⭐️ 3. 클라이언트(Memo.jsx)의 기대에 맞춰 응답 구조 변경
