@@ -124,7 +124,7 @@ export default function Signup() {
             to="/login"
             className="inline-block text-gray-400 text-sm hover:text-blue-400 transition duration-200 underline hover:no-underline"
           >
-            이미 계정이 있으신가요? 로그인으로 돌아가기
+            이미 계정이 있으신가요? 로그인으로 돌아가기  
           </Link>
 
           {/* 처음으로 링크: 버튼 형태로 변경하여 가시성 높임 */}
