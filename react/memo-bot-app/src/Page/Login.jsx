@@ -8,32 +8,32 @@ import { Link } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // ⭐️ 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.auth.token);
-  const error = useSelector((state) => state.auth.error); // ⭐️ 에러 상태 가져오기
+  const error = useSelector((state) => state.auth.error);
 
   useEffect(() => {
+    // 로그인 성공 시
     if (token) {
       console.log("로그인 상태, 토큰:", token);
       navigate("/");
-    }
+    } // 토큰 상태가 변경되거나 에러가 발생하면 로딩 종료
 
-    // ⭐️ 토큰 상태가 변경되거나 에러가 발생하면 로딩 종료
     if (token || error) {
       setIsLoading(false);
     }
-  }, [token, error, navigate]); // 의존성 배열에 error 추가
+  }, [token, error, navigate]);
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (isLoading) return; // 로딩 중 중복 클릭 방지
+    if (isLoading) return;
 
-    setIsLoading(true); // ⭐️ 로딩 시작
+    setIsLoading(true);
     dispatch(login({ email: email, password: password }));
   }
 
@@ -46,22 +46,19 @@ export default function Login() {
         <div className="text-center mb-8">
                    {" "}
           <p className="text-4xl font-extrabold text-blue-400">Memo AI</p>     
-              <h1 className="text-xl text-gray-300 mt-2">로그인</h1>
-          {/* ⭐️ 에러 메시지 출력 */}           {" "}
+              <h1 className="text-xl text-gray-300 mt-2">로그인</h1>         {" "}
+          {/* 에러 메시지 출력 */}         {" "}
           {error && (
             <p className="text-red-400 text-sm mt-3 bg-gray-700 p-2 rounded-md border border-red-500">
-                             {" "}
+                           {" "}
               {typeof error === "string" ? error : "로그인에 실패했습니다."}   
-                       {" "}
+                     {" "}
             </p>
           )}
                  {" "}
         </div>
                 {/* 로그인 폼 */}       {" "}
-        <form
-          onSubmit={handleSubmit} // 인라인 함수 제거하고 handleSubmit 직접 연결 (더 깔끔)
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-6">
                     {/* 이메일 입력 필드 */}
                    {" "}
           <input
@@ -90,14 +87,14 @@ export default function Login() {
                    {" "}
           <input
             className={`w-full text-white font-bold p-3 rounded-lg cursor-pointer transition duration-200 
-                ${
-                  isLoading
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-                }`}
+              ${
+              isLoading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            }`}
             type="submit"
-            value={isLoading ? "로그인 중..." : "로그인"} // ⭐️ 로딩 상태에 따른 텍스트 변경
-            disabled={isLoading} // ⭐️ 로딩 중 버튼 비활성화
+            value={isLoading ? "로그인 중..." : "로그인"}
+            disabled={isLoading}
           />
                  {" "}
         </form>
