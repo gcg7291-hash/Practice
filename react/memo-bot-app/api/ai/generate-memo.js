@@ -1,4 +1,4 @@
-// 📁 api/ai/generate-memo.js (통합 및 수정 버전)
+// 📁 api/ai/generate-memo.js
 
 import { GoogleGenAI } from "@google/genai";
 
@@ -8,7 +8,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const ai = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
 
 // ==========================================================
-// ⭐️ genai.js에서 가져온 설정 및 스키마 (generate-memo.js 내부로 통합)
+// ⭐️ AI 설정 및 스키마
 // ==========================================================
 
 const responseSchema = {
@@ -16,11 +16,11 @@ const responseSchema = {
   properties: {
     title: {
       type: "string",
-      description: "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다.",
+      description: "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다. 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     content: {
       type: "string",
-      description: "할 일 내용 (본문)",
+      description: "할 일 내용 (본문). 업무 관련 질문이 아닐 경우 '업무 관련 질문이 아닙니다'를 채웁니다.",
     },
     dueDate: {
       type: "string",
@@ -33,7 +33,7 @@ const responseSchema = {
     },
     category: {
       type: "string",
-      description: "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등)",
+      description: "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등). 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     createdAt: {
       type: "string",
@@ -46,7 +46,7 @@ const responseSchema = {
     },
     toDay: {
       type: "string",
-      enum: ["월", "화", "수", "목", "금", "토", "일"], 
+      enum: ["월", "화", "수", "목", "금", "토", "일"],
       description: "작성 요일",
     },
   },
@@ -66,26 +66,27 @@ const responseSchema = {
 const baseSystemInstruction = [
   "당신은 전문 업무 및 할 일 관리 분석가입니다.",
   "오로지 업무, 할 일, 메모, 계획 등과 관련된 질문에만 답변해야 합니다.",
-  "업무, 할 일 질문이 아니면 `답변 할 수 없습니다` 라는 텍스트와 함께, JSON 객체의 title 필드에 '답변 불가'를, content 필드에 '업무 관련 질문이 아닙니다'를 채워서 유효한 JSON 객체만 반환합니다.",
+  // ⭐️ 핵심 지침: 업무 관련 질문이 아닐 때 응답을 강제합니다.
+  "사용자 입력이 업무, 할 일, 메모, 계획과 관련이 없다면, title 필드에 '답변 불가'를, content 필드에 '업무 관련 질문이 아닙니다'를 채우고, category 필드에도 '답변 불가'를 채워서 유효한 JSON 객체만 반환해야 합니다. 다른 필수 필드는 임의의 기본값으로 채웁니다.",
 ];
 
 function getConfig(currentDateString) {
   const systemInstructionWithDate = [
     `오늘 날짜: ${currentDateString}`,
     ...baseSystemInstruction,
-  ].join(" "); // 배열을 하나의 문자열로 합쳐서 systemInstruction으로 전달
+  ].join(" ");
 
   return {
-    temperature: 0.5, // 0.9에서 0.5로 낮춰서 JSON 안정성 향상
+    temperature: 0.5, 
     maxOutputTokens: 1000,
     systemInstruction: systemInstructionWithDate,
     responseMimeType: "application/json",
-    responseSchema: responseSchema, // JSON 스키마 적용
+    responseSchema: responseSchema,
   };
 }
 
 // ==========================================================
-// ⭐️ Vercel 서버리스 handler 함수 (API 호출 로직 수정)
+// ⭐️ Vercel 서버리스 handler 함수
 // ==========================================================
 
 export default async function handler(req, res) {
@@ -120,10 +121,7 @@ export default async function handler(req, res) {
     const todayDate = new Date();
     const todayDateString = todayDate.toISOString().slice(0, 10);
 
-    // ⭐️ AI 설정 (시스템 명령, JSON 스키마) 적용
     const modelConfig = getConfig(todayDateString);
-
-    // ⭐️ JSON 스키마를 사용하기 때문에, Prompt를 더 간결하게 수정했습니다.
     const prompt = `사용자의 요청을 분석하여 유효한 JSON 객체를 반환하세요: "${message}"`;
 
     const structuredResponse = await ai.models.generateContent({
@@ -133,13 +131,19 @@ export default async function handler(req, res) {
     });
 
     const jsonText = structuredResponse.text.trim();
-    // ⭐️ responseMimeType이 'application/json'으로 설정되어 있어
-    //    대부분의 경우 유효한 JSON이 반환되지만, 만약을 위해 파싱 시도
     const parsedData = JSON.parse(jsonText); 
+
+    // ⭐️ AI 응답 텍스트 결정 로직: 답변 불가 시 다른 메시지를 출력합니다.
+    let aiResponseText;
+    if (parsedData.title === '답변 불가' && parsedData.content === '업무 관련 질문이 아닙니다') {
+        aiResponseText = "죄송합니다. 업무 관련 질문이 아닙니다.";
+    } else {
+        aiResponseText = `AI가 메모 정보를 추출했습니다. 저장하시겠어요? (제목: ${parsedData.title})`;
+    }
 
     return res.status(200).json({
       structuredMemo: parsedData,
-      aiText: `AI가 메모 정보를 추출했습니다. 저장하시겠어요? (제목: ${parsedData.title})`,
+      aiText: aiResponseText, // 수정된 메시지 사용
     });
 
   } catch (error) {
