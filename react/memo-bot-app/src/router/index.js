@@ -8,30 +8,10 @@ import AuthLayout from "../layout/AuthLayout";
 import PrivateLayout from "../layout/PrivateLayout";
 import RootLayout from "../layout/RootLayout";
 import About from "../Page/About";
+import Profile from "../Page/Profile";
 import NotFound from "../Page/NotFound";
 
-
 const router = createBrowserRouter([
-  {
-    path: "/",
-    Component: RootLayout,
-  },
-  {
-    path: "/login",
-    Component: Login,
-  },
-  {
-    path: "/memo",
-    Component: Memo,
-  },
-  {
-    path: "/memolist",
-    Component: MemoList,
-  },
-  {
-    path: "/about",
-    Component: About,
-  },
   {
     path: "/signup",
     Component: Signup,
@@ -41,16 +21,42 @@ const router = createBrowserRouter([
     Component: AuthLayout,
   },
   {
+    path: "/profile",
+    Component: Profile,
+  },
+  {
     path: "/privatelayout",
     Component: PrivateLayout,
   },
   {
-    path: "/rootlayout",
-    Component: RootLayout,
+    path: "/login",
+    Component: Login,
   },
   {
-    path: "*",
-    Component: NotFound,
+    path: "/",
+    Component: RootLayout,
+    children: [
+      {
+        path: "/",
+        Component: Home,
+      },
+      {
+        path: "/memo",
+        Component: Memo,
+      },
+      {
+        path: "/memolist",
+        Component: MemoList,
+      },
+      {
+        path: "/about",
+        Component: About,
+      },
+      {
+        path: "*",
+        Component: NotFound,
+      },
+    ],
   },
 ]);
 

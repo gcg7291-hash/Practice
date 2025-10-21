@@ -2,27 +2,87 @@ import { ai } from "../utils/genai";
 import { chat } from "../utils/genai";
 import { config } from "../utils/genai";
 import { useState } from "react";
+// ⭐️ 메모 확인 UI를 MessageList 안에서 처리하기 위해 MessageList 내부에서 렌더링되도록 수정하거나,
+// 이 코드를 MessageList에 통합하는 것이 이상적이지만, 여기서는 분리된 상태로 스타일링합니다.
 import MessageList from "../components/MessageList";
 import ChatForm from "../components/ChatForm";
-import { responseSchema } from "../utils/genai"; // responseSchema import
+import { responseSchema } from "../utils/genai";
 import { addMemo } from "../utils/memoStorage";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+// ⭐️ MemoConfirmation 컴포넌트를 분리하여 깔끔하게 처리합니다.
+const MemoConfirmation = ({ structuredMemo, onSave, onCancel }) => (
+  // ⭐️ 일반 AI 메시지 말풍선과 유사한 스타일을 적용
+  <div className="bg-blue-900/50 p-4 rounded-xl max-w-xl self-start mb-4 shadow-lg border border-blue-800">
+    <h3 className="text-lg font-bold text-blue-300 mb-3">
+      AI가 메모를 작성했습니다. 저장하시겠어요?
+    </h3>
 
-export default function Chat() {
+    <div className="space-y-2 text-gray-200 text-sm">
+      <p>
+        <strong className="text-blue-200">제목:</strong> {structuredMemo.title}
+      </p>
+      <p>
+        <strong className="text-blue-200">작성일:</strong>{" "}
+        {structuredMemo.createdAt} ({structuredMemo.toDay})
+      </p>
+      <p>
+        <strong className="text-blue-200">마감일:</strong>{" "}
+        {structuredMemo.dueDate} ({structuredMemo.newDay})
+      </p>
+      <p>
+        <strong className="text-blue-200">중요도:</strong>{" "}
+        {structuredMemo.priority}
+      </p>
+      <p>
+        <strong className="text-blue-200">카테고리:</strong>{" "}
+        {structuredMemo.category}
+      </p>
+    </div>
+
+    <div className="flex justify-end gap-3 mt-4 pt-3 border-t border-blue-800">
+      {/* 생성 버튼: 파란색 강조 */}
+      <button
+        onClick={onSave}
+        className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition duration-200 shadow-md"
+      >
+        ✔️ 메모 저장
+      </button>
+      {/* 취소 버튼: 보조 색상 */}
+      <button
+        onClick={onCancel}
+        className="bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-500 transition duration-200 shadow-md"
+      >
+        ❌ 취소
+      </button>
+    </div>
+  </div>
+);
+
+export default function Memo() {
   const [prompt, setPrompt] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // LLM이 구조화한 임시 메모 데이터를 저장하는 상태
   const [structuredMemo, setStructuredMemo] = useState(null);
 
+  const token = useSelector((state) => {
+    return state.auth.token;
+  });
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token]);
   async function handleSubmit(event) {
     event.preventDefault();
 
     if (isLoading === true || prompt.trim() === "") return;
 
-    // 이전에 임시 메모가 남아있다면 초기화
     setStructuredMemo(null);
 
+    // ⭐️ 사용자 메시지 추가
     setMessages((prev) => [...prev, { role: "user", content: prompt }]);
 
     const currentPrompt = prompt;
@@ -33,15 +93,18 @@ export default function Chat() {
     setIsLoading(false);
   }
 
+  // (generateAiContent 함수는 변경 없음)
   async function generateAiContent(currentPrompt) {
+    const today = new Date().toISOString().slice(0, 10);
+    const contentsWithDate = `오늘 날짜는 ${today}입니다. 이 정보를 바탕으로 메모의 제목, 내용, 그리고 작성 날짜(toDay)와 마감 날짜(dueDate)를 JSON 형식으로 추출해 주세요: "${currentPrompt}"`;
     try {
-      // 1. LLM에게 구조화된 JSON 데이터 생성 요청 (메모 저장용)
+      // 1. 구조화된 데이터 추출 시도
       const structuredResponse = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: currentPrompt,
+        contents: contentsWithDate,
         config: {
-          responseMimeType: "application/json", // JSON 응답 강제
-          responseSchema: responseSchema, // 수정된 스키마 적용 (title, content 포함)
+          responseMimeType: "application/json",
+          responseSchema: responseSchema,
         },
       });
 
@@ -50,16 +113,19 @@ export default function Chat() {
 
       try {
         parsedData = JSON.parse(jsonText);
-        // 구조화된 데이터 상태 저장: title, content, dueDate 등을 추출하여 저장
+
         setStructuredMemo({
           title: parsedData.title,
           content: parsedData.content,
-          // dueDate 필드가 스키마에 있다면 여기에도 추가
           dueDate: parsedData.dueDate || "N/A",
+          priority: parsedData.priority,
+          category: parsedData.category,
+          createdAt: parsedData.createdAt,
+          newDay: parsedData.newDay,
+          toDay: parsedData.toDay,
         });
       } catch (e) {
         console.error("JSON 파싱 실패:", e);
-        // JSON 파싱 실패 시, 메모 생성 프로세스를 진행하지 않기 위해 초기화
         setStructuredMemo(null);
         setMessages((prev) => [
           ...prev,
@@ -68,19 +134,17 @@ export default function Chat() {
             content: "죄송합니다. 메모 분석 중 오류가 발생했습니다.",
           },
         ]);
-        return; // 실패 시 여기서 함수 종료
+        return;
       }
 
-      // 2. LLM에게 포토 카드 텍스트 응답 요청 (사용자 표시용)
-      // chat.sendMessage를 사용하여 대화 흐름을 유지하며 포토 카드 텍스트를 요청합니다.
+      // 2. 일반 텍스트 응답 생성 및 메시지 추가
       const textResponse = await chat.sendMessage({
         message: currentPrompt,
-        config: config, // 포토 카드 지침이 포함된 config 사용
+        config: config,
       });
 
       const aiText = textResponse.text;
 
-      // 포토 카드 형식의 AI 답변을 메시지 목록에 추가
       setMessages((prev) => [...prev, { role: "ai", content: aiText }]);
     } catch (error) {
       console.error("AI 응답 생성 오류:", error);
@@ -91,57 +155,66 @@ export default function Chat() {
     }
   }
 
-  // 메모 생성 함수
   const handleCreateMemo = () => {
     if (structuredMemo) {
-      // addMemo 유틸리티는 id, createdAt, isCompleted를 자동으로 추가합니다.
       addMemo(structuredMemo);
-      alert(
-        `메모가 생성되어 로컬 스토리지에 저장되었습니다: ${structuredMemo.title}`
-      );
-      setStructuredMemo(null); // 임시 메모 초기화
+      setStructuredMemo(null);
+      // ⭐️ 메모 생성 완료 메시지를 대화에 추가
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "ai",
+          content: `"${structuredMemo.title}" 메모가 성공적으로 저장되었습니다.`,
+        },
+      ]);
     }
   };
 
-  // 메모 생성 취소 함수
   const handleCancelMemo = () => {
-    setStructuredMemo(null);
+    // ⭐️ 메모 생성 취소 메시지를 대화에 추가
     setMessages((prev) => [
       ...prev,
-      { role: "ai", content: "메모 생성을 취소했습니다." },
+      {
+        role: "ai",
+        content: "메모 생성을 취소했습니다.",
+      },
     ]);
+    setStructuredMemo(null);
   };
 
   return (
-    <>
-      <MessageList messages={messages} />
+    // 🚀 수정된 컨테이너: 화면을 꽉 채우고(min-h-screen), 수직 중앙 정렬(items-center)
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-center p-4">
+      {/* 🚀 중앙에 배치될 메인 컨텐츠 영역 (메시지 목록 + 입력 폼) */}
+      {/* 🚀 max-w-2xl: 최대 너비를 설정하여 가운데 정렬되게 함 */}
+      {/* 🚀 flex-grow: 화면 크기가 충분할 때 중앙 정렬을 돕기 위해 사용 */}
+      <div className="w-full max-w-2xl flex flex-col h-full md:h-[600px] bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+        
+        {/* ⭐️ 메시지 목록: 유연하게 채우고 스크롤 가능하게 함 */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 rounded-t-xl">
+          {/* 기존 메시지 목록 렌더링 */}
+          <MessageList messages={messages} />
 
-      {/* 구조화된 데이터 확인 및 생성/취소 버튼 */}
-      {structuredMemo && (
-        <div className="memo-confirmation">
-          <h3>메모를 생성하시겠어요?</h3>
-          <p>
-            <strong>제목:</strong> {structuredMemo.title}
-          </p>
-          <p>
-            <strong>내용:</strong> {structuredMemo.content}
-          </p>
-          {structuredMemo.dueDate && structuredMemo.dueDate !== "N/A" && (
-            <p>
-              <strong>마감일:</strong> {structuredMemo.dueDate}
-            </p>
+          {/* ⭐️ 구조화된 메모 확인 UI를 메시지 목록의 흐름에 따라 렌더링 */}
+          {structuredMemo && (
+            <MemoConfirmation
+              structuredMemo={structuredMemo}
+              onSave={handleCreateMemo}
+              onCancel={handleCancelMemo}
+            />
           )}
-          <button onClick={handleCreateMemo}>생성</button>
-          <button onClick={handleCancelMemo}>취소</button>
         </div>
-      )}
 
-      <ChatForm
-        prompt={prompt}
-        setPrompt={setPrompt}
-        isLoading={isLoading}
-        onSubmit={handleSubmit}
-      />
-    </>
+        {/* 🚀 채팅 입력 폼: 하단 고정 해제 및 내부 컨테이너의 하단에 배치 */}
+        <div className="p-4 bg-gray-700/50 border-t border-gray-700 rounded-b-xl">
+          <ChatForm
+            prompt={prompt}
+            setPrompt={setPrompt}
+            isLoading={isLoading}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
