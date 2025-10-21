@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signup, resetIsSignup, resetError } from "../store/authSlice";
+// ⭐️ 이 import는 이제 authSlice.js가 수정되었으므로 오류가 나지 않습니다.
+import { signup, resetIsSignup, resetError } from "../store/authSlice"; 
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -23,7 +24,7 @@ export default function Signup() {
     // 비밀번호 일치 확인
     if (password !== confirmPassword) {
       alert("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-      dispatch(resetError());
+      dispatch(resetError()); 
       return;
     }
 
@@ -38,7 +39,7 @@ export default function Signup() {
       navigate("/login"); // 로그인 페이지로 이동하는 것이 일반적
     }
 
-    // ⭐️ isSignup 상태가 변경되거나 에러가 발생하면 로딩 종료
+    // isSignup 상태가 변경되거나 에러가 발생하면 로딩 종료
     if (isSignup || error) {
       setIsLoading(false);
     }
@@ -51,7 +52,7 @@ export default function Signup() {
           <span className="text-4xl font-extrabold text-blue-400">Memo AI</span>
           <h1 className="text-xl text-gray-300 mt-2">회원가입</h1>
 
-          {/* 에러 메시지 출력 - ⭐️ API Key 오류 필터링 추가 */}
+          {/* 에러 메시지 출력 - ⭐️ API Key 오류 필터링 적용 */}
           {error && (
             <p className="text-red-400 text-sm mt-3 p-3 rounded-lg border border-red-600 bg-gray-700/50">
               {/* API key 오류를 사용자 친화적 메시지로 대체 */}
