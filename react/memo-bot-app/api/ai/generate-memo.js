@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     
     return res.status(500).json({ 
       error: "서버 내부 오류: AI 응답 파싱 실패 또는 API 통신 오류",
-      details: error.message 
+      details: error.message
     });
   }
 }
