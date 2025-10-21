@@ -34,21 +34,21 @@ export default function RootLayout() {
         {/* ⭐️ 1. 로고 섹션: 항상 고정된 크기 */}
         <Link
           to="/"
-          className="text-blue-400 font-extrabold text-xl sm:text-2xl hover:text-blue-300 whitespace-nowrap mr-4 shrink-0"
+          className="text-blue-400 font-extrabold text-xl sm:text-2xl hover:text-blue-300 whitespace-nowrap mr-2 sm:mr-4 shrink-0"
         >
           Memo AI
         </Link>
 
         {/* ⭐️ 2. 네비게이션 링크 섹션: flex-1로 남은 공간 유연하게 사용 */}
-        <nav className="flex items-center space-x-2 flex-1 min-w-0">
+        <nav className="flex items-center space-x-1 sm:space-x-4 flex-1 min-w-0">
           {navLinks.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                // ⭐️ 모바일에서 패딩을 더 줄여 공간 확보 (px-2, py-1)
-                `px-2 py-1 sm:px-4 sm:py-2 text-sm whitespace-nowrap cursor-pointer hover:text-blue-400 transition duration-200 
-                text-gray-300 hover:bg-gray-700 rounded-lg
+                // 모바일에서 패딩을 더 줄여 공간 확보 (px-2, py-1)
+                `px-2 py-1 text-sm whitespace-nowrap cursor-pointer hover:text-blue-400 transition duration-200 
+                sm:px-4 sm:py-2 text-gray-300 hover:bg-gray-700 rounded-lg
                 ${isActive ? activeNavItemClass : ""}`
               }
             >
@@ -58,27 +58,29 @@ export default function RootLayout() {
         </nav>
 
         {/* ⭐️ 3. 인증 버튼 그룹: shrink-0과 min-w-fit으로 절대 깨지지 않도록 보호 */}
-        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 min-w-fit ml-4">
+        <div className="flex items-center space-x-1 sm:space-x-3 shrink-0 ml-2 sm:ml-4">
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="bg-red-600 text-white px-3 py-2 rounded-lg cursor-pointer text-sm font-medium hover:bg-red-700 transition duration-200 shadow-md shadow-red-500/50 whitespace-nowrap"
+              // ⭐️ 모바일에서 패딩 최소화: px-2.5 py-1.5
+              className="bg-red-600 text-white px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm font-medium hover:bg-red-700 transition duration-200 shadow-md shadow-red-500/50 whitespace-nowrap"
             >
               🚪 로그아웃
             </button>
           ) : (
             // ⭐️ 로그인/회원가입 그룹: 내부 div로 묶어 flex 공간 확보
-            <div className="flex space-x-2 sm:space-x-3 items-center">
+            <div className="flex space-x-1 sm:space-x-3 items-center">
               <Link
                 to="/login"
-                // ⭐️ 모바일에서 패딩을 더 줄여 공간 확보 (px-2)
-                className="text-blue-400 px-2 py-1 sm:px-3 sm:py-2 cursor-pointer text-sm font-medium hover:text-blue-300 transition duration-200 whitespace-nowrap"
+                // ⭐️ 모바일에서 패딩 최소화: px-1 py-1, 텍스트 크기 xs
+                className="text-blue-400 px-1 py-1 sm:px-3 sm:py-2 cursor-pointer text-xs sm:text-sm font-medium hover:text-blue-300 transition duration-200 whitespace-nowrap"
               >
                 로그인
               </Link>
               <Link
                 to="/signup"
-                className="bg-blue-600 text-white px-3 py-2 rounded-lg cursor-pointer text-sm font-medium hover:bg-blue-700 transition duration-200 shadow-md shadow-blue-500/50 whitespace-nowrap"
+                // ⭐️ 모바일에서 패딩 최소화: px-2.5 py-1.5, 텍스트 크기 xs
+                className="bg-blue-600 text-white px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg cursor-pointer text-xs sm:text-sm font-medium hover:bg-blue-700 transition duration-200 shadow-md shadow-blue-500/50 whitespace-nowrap"
               >
                 회원가입
               </Link>
