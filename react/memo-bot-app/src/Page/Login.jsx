@@ -47,12 +47,14 @@ export default function Login() {
           <p className="text-4xl font-extrabold text-blue-400">Memo AI</p>
           <h1 className="text-xl text-gray-300 mt-2">로그인</h1>
           
-          {/* 에러 메시지 출력 */}
+          {/* 에러 메시지 출력 - ⭐️ API Key 오류 필터링 추가 */}
           {error && (
-            // ⭐️ No API key found in request와 같은 Supabase 오류를 처리하기 위해
-            //    Signup.jsx와 동일하게 메시지 필터링 로직을 적용하는 것을 고려해 보세요.
             <p className="text-red-400 text-sm mt-3 bg-gray-700 p-3 rounded-lg border border-red-500">
-              {typeof error === "string" ? error : "로그인에 실패했습니다."}
+              {/* API key 오류를 사용자 친화적 메시지로 대체 */}
+              {typeof error === "string" && (error.includes("API key") || error.includes("No API key"))
+                ? "인증 시스템 연결에 실패했습니다. 다시 시도해 주세요."
+                : (typeof error === "string" ? error : "로그인 또는 로그아웃 처리 중 오류가 발생했습니다.")
+              }
             </p>
           )}
         </div>

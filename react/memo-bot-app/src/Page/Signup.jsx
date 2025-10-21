@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signup, resetIsSignup, resetError } from "../store/authSlice"; // ⭐️ resetError import
+import { signup, resetIsSignup, resetError } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -8,7 +8,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // ⭐️ 로딩 상태 추가
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function Signup() {
     // 비밀번호 일치 확인
     if (password !== confirmPassword) {
       alert("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-      dispatch(resetError()); // 에러 메시지 초기화 (선택 사항)
+      dispatch(resetError());
       return;
     }
 
@@ -42,12 +42,6 @@ export default function Signup() {
     if (isSignup || error) {
       setIsLoading(false);
     }
-
-    // ⭐️ 에러 발생 시 사용자에게 피드백 후, 에러 메시지 초기화 (선택 사항)
-    if (error) {
-      // alert(`회원가입 실패: ${error}`);
-      // dispatch(resetError());
-    }
   }, [isSignup, error, dispatch, navigate]);
 
   return (
@@ -56,10 +50,17 @@ export default function Signup() {
         <div className="text-center mb-8">
           <span className="text-4xl font-extrabold text-blue-400">Memo AI</span>
           <h1 className="text-xl text-gray-300 mt-2">회원가입</h1>
-          {/* 에러 메시지 출력 */}
+
+          {/* 에러 메시지 출력 - ⭐️ API Key 오류 필터링 추가 */}
           {error && (
             <p className="text-red-400 text-sm mt-3 p-3 rounded-lg border border-red-600 bg-gray-700/50">
-              {typeof error === "string" ? error : "회원가입에 실패했습니다."}
+              {/* API key 오류를 사용자 친화적 메시지로 대체 */}
+              {typeof error === "string" &&
+              (error.includes("API key") || error.includes("No API key"))
+                ? "인증 시스템 연결에 실패했습니다. 다시 시도해 주세요."
+                : typeof error === "string"
+                ? error
+                : "회원가입에 실패했습니다."}
             </p>
           )}
         </div>

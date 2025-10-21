@@ -1,8 +1,7 @@
-// 📁 api/ai/generate-memo.js
+// 📁 api/ai/generate-memo.js (수정된 최종 버전)
 
 import { GoogleGenAI } from "@google/genai";
 
-// 🚨 Vercel 환경 변수에서 가져옵니다. Vercel 대시보드에 GEMINI_API_KEY를 등록해야 합니다.
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const ai = GEMINI_API_KEY ? new GoogleGenAI({ apiKey: GEMINI_API_KEY }) : null;
@@ -17,12 +16,12 @@ const responseSchema = {
     title: {
       type: "string",
       description:
-        "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다. 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
+        "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다. 할 일 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     content: {
       type: "string",
       description:
-        "할 일 내용 (본문). 업무 관련 질문이 아닐 경우 '업무 관련 질문이 아닙니다'를 채웁니다.",
+        "할 일 내용 (본문). 할 일 관련 질문이 아닐 경우 '할 일 관련 질문이 아닙니다'를 채웁니다.", // 텍스트를 "업무"에서 "할 일"로 통일
     },
     dueDate: {
       type: "string",
@@ -36,7 +35,7 @@ const responseSchema = {
     category: {
       type: "string",
       description:
-        "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등). 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
+        "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등). 할 일 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     createdAt: {
       type: "string",
@@ -69,8 +68,8 @@ const responseSchema = {
 const baseSystemInstruction = [
   "당신은 전문 업무 및 할 일 관리 분석가입니다.",
   "오로지 업무, 할 일, 메모, 계획 등과 관련된 질문에만 답변해야 합니다.",
-  // ⭐️ 핵심 지침: 업무 관련 질문이 아닐 때 응답을 강제합니다.
-  "사용자 입력이 업무, 할 일, 메모, 계획과 관련이 없다면, title 필드에 '답변 불가'를, content 필드에 '업무 관련 질문이 아닙니다'를 채우고, category 필드에도 '답변 불가'를 채워서 유효한 JSON 객체만 반환해야 합니다. 다른 필수 필드는 임의의 기본값으로 채웁니다.",
+  // ⭐️ 핵심 수정: AI가 JSON 필드에 채워야 할 내용을 명확히 지시합니다.
+  "사용자 입력이 업무, 할 일, 메모, 계획과 관련이 없다면, title 필드에 '답변 불가'를, content 필드에 '할 일 관련 질문이 아닙니다'를 채우고, category 필드에도 '답변 불가'를 채워서 유효한 JSON 객체만 반환해야 합니다. 다른 필수 필드는 임의의 유효한 기본값으로 채웁니다.",
 ];
 
 function getConfig(currentDateString) {
@@ -136,13 +135,17 @@ export default async function handler(req, res) {
     const jsonText = structuredResponse.text.trim();
     const parsedData = JSON.parse(jsonText);
 
-    // ⭐️ AI 응답 텍스트 결정 로직: 답변 불가 시 다른 메시지를 출력합니다.
+    // ⭐️ AI 응답 텍스트 결정 로직: 답변 불가 시 메시지 텍스트를 명확히 구분합니다.
     let aiResponseText;
     if (
       parsedData.title === "답변 불가" &&
-      parsedData.content === "업무 관련 질문이 아닙니다"
+      parsedData.content === "할 일 관련 질문이 아닙니다"
     ) {
-      aiResponseText = "죄송합니다. 업무 관련 질문이 아닙니다.";
+      // ⭐️ 질문의 의도에 맞게 텍스트 설정
+      aiResponseText = "죄송합니다. 할 일 관련 질문이 아닙니다."; 
+    } else {
+      // ⭐️ 정상적인 응답일 때 메시지 설정
+      aiResponseText = `AI가 메모 정보를 추출했습니다. 저장하시겠어요? (제목: ${parsedData.title})`;
     }
 
     return res.status(200).json({

@@ -1,4 +1,4 @@
-// 📁 src/pages/Memo.jsx (최종 수정 버전 - 불필요한 JSX 공백 제거)
+// 📁 src/pages/Memo.jsx (메모 카드 표시 로직 수정)
 
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -75,7 +75,7 @@ export default function Memo() {
 
     if (isLoading || prompt.trim() === "") return;
 
-    setStructuredMemo(null); // 사용자 메시지를 먼저 대화 목록에 추가
+    setStructuredMemo(null); 
 
     setMessages((prev) => [...prev, { role: "user", content: prompt }]);
 
@@ -89,12 +89,10 @@ export default function Memo() {
 
   // 핵심 로직: 서버리스 함수를 호출하여 AI 응답을 받음
   async function generateAiContent(currentPrompt) {
-    // ⭐️ 404 에러 해결: Base URL 대신 상대 경로를 사용하여 URL을 구성합니다.
     const apiUrl = `/api/ai/generate-memo`;
 
     try {
       const response = await axios.post(apiUrl, {
-        // 수정된 apiUrl 사용
         message: currentPrompt,
       });
 
@@ -107,7 +105,6 @@ export default function Memo() {
         dueDate: parsedData.dueDate || "N/A",
         priority: parsedData.priority,
         category: parsedData.category,
-        // toDay와 createdAt 같은 필드는 AI 응답에 따라 맞춤
         createdAt:
           parsedData.createdAt || new Date().toISOString().slice(0, 10),
         toDay: parsedData.toDay || new Date().toISOString().slice(0, 10),
@@ -116,7 +113,7 @@ export default function Memo() {
       // 2. 일반 텍스트 응답을 메시지 목록에 추가 (대화 내용)
       setMessages((prev) => [...prev, { role: "ai", content: aiText }]);
     } catch (error) {
-      console.error("AI 응답 생성 오류:", error); // 서버리스 함수 응답(404, 500 등)에서 에러 메시지를 추출하여 사용자에게 표시
+      console.error("AI 응답 생성 오류:", error); 
 
       const errorMessage =
         error.response?.data?.error ||
@@ -166,8 +163,9 @@ export default function Memo() {
         <div className="flex-1 overflow-y-auto p-4 md:p-6 rounded-t-xl">
           {/* 기존 메시지 목록 렌더링 */}
           <MessageList messages={messages} />
-          {/* 구조화된 메모 확인 UI 렌더링 */}
-          {structuredMemo && (
+          
+          {/* ⭐️ 핵심 수정: title이 '답변 불가'가 아닐 때만 메모 확인 카드를 표시 */}
+          {structuredMemo && structuredMemo.title !== '답변 불가' && (
             <MemoConfirmation
               structuredMemo={structuredMemo}
               onSave={handleCreateMemo}
@@ -175,6 +173,7 @@ export default function Memo() {
             />
           )}
         </div>
+        
         {/* 채팅 입력 폼 */}
         <div className="p-4 bg-gray-700/50 border-t border-gray-700 rounded-b-xl">
           <ChatForm
