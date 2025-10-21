@@ -1,77 +1,65 @@
 import React from "react";
 import { Outlet, NavLink, Link } from "react-router-dom";
-// Redux 상태 사용을 위해 useSelector와 useDispatch를 가져옵니다.
 import { useSelector, useDispatch } from "react-redux";
-// 로그아웃 액션 생성자 함수를 가져옵니다.
 import { logout } from "../store/authSlice";
 
 export default function RootLayout() {
-  // Redux에서 토큰 상태를 가져옵니다.
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-
-  // 토큰 존재 여부로 로그인 상태를 판단합니다.
   const isLoggedIn = !!token;
 
-  // 필수로 보여야 하는 네비게이션 아이템
-  const essentialNavItems = [
-    { path: "/", label: "Memo AI" },
+  // 로고를 제외한 필수 네비게이션 아이템
+  const essentialLinks = [
     { path: "/memo", label: "메모 작성" },
     { path: "/memolist", label: "메모 목록" },
   ];
 
-  // 로그인 상태에 따라 추가되는 아이템
   const userNavItems = isLoggedIn
     ? [{ path: "/profile", label: "내 정보" }]
     : [];
 
-  // 모든 네비게이션 아이템
-  const navItems = [...essentialNavItems, ...userNavItems];
+  const navLinks = [...essentialLinks, ...userNavItems];
 
-  // ⭐️ 활성화된 내비게이션 항목의 스타일을 명확하게 정의
   const activeNavItemClass =
     "bg-blue-700 text-white font-bold rounded-lg shadow-md shadow-blue-500/50 transition duration-300 transform scale-105";
 
-  // 로그아웃 처리 함수
   const handleLogout = () => {
     dispatch(logout());
   };
 
   return (
-    // 전체 컨테이너
     <div className="min-h-screen bg-slate-900 text-gray-100 flex flex-col">
-      {/* ⭐️ 헤더/내비게이션 바: 너비 전체 사용, 요소 간격 유지를 위한 justify-between */}
+      {/* ⭐️ 헤더: w-full, flex */}
       <header className="w-full flex justify-between items-center bg-gray-800 border-b border-gray-700 p-3 sm:p-4 sticky top-0 z-20 shadow-lg">
-        {/* ⭐️ 네비게이션 항목 그룹: 공간을 채울 수 있도록 flex-1, 그러나 최소 크기 이상으로 줄어들지 않도록 shrink-0 설정*/}
-        <nav className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
-          {navItems.map((item) => {
-            const isLogo = item.path === "/";
+        {/* ⭐️ 1. 로고 섹션: 항상 고정된 크기 */}
+        <Link
+          to="/"
+          className="text-blue-400 font-extrabold text-xl sm:text-2xl hover:text-blue-300 whitespace-nowrap mr-4 shrink-0"
+        >
+          Memo AI
+        </Link>
 
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                // whitespace-nowrap으로 줄바꿈 방지
-                className={({ isActive }) =>
-                  `px-3 py-1 sm:px-4 sm:py-2 text-sm whitespace-nowrap cursor-pointer hover:text-blue-400 transition duration-200 
-                  ${
-                    isLogo
-                      ? "text-blue-400 font-extrabold text-xl sm:text-2xl hover:text-blue-300"
-                      : "text-gray-300 hover:bg-gray-700 rounded-lg"
-                  } 
-                  ${isActive ? activeNavItemClass : ""}`
-                }
-              >
-                {item.label}
-              </NavLink>
-            );
-          })}
+        {/* ⭐️ 2. 네비게이션 링크 섹션: flex-1로 남은 공간 유연하게 사용 */}
+        <nav className="flex items-center space-x-2 flex-1 min-w-0">
+          {navLinks.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                // ⭐️ 모바일에서 패딩을 더 줄여 공간 확보 (px-2, py-1)
+                `px-2 py-1 sm:px-4 sm:py-2 text-sm whitespace-nowrap cursor-pointer hover:text-blue-400 transition duration-200 
+                text-gray-300 hover:bg-gray-700 rounded-lg
+                ${isActive ? activeNavItemClass : ""}`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
-        {/* ⭐️ 인증 관련 버튼 그룹: 공간이 부족해도 줄어들지 않도록 shrink-0 설정 */}
-        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        {/* ⭐️ 3. 인증 버튼 그룹: shrink-0과 min-w-fit으로 절대 깨지지 않도록 보호 */}
+        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 min-w-fit ml-4">
           {isLoggedIn ? (
-            // 로그인 상태일 때: 로그아웃 버튼 표시
             <button
               onClick={handleLogout}
               className="bg-red-600 text-white px-3 py-2 rounded-lg cursor-pointer text-sm font-medium hover:bg-red-700 transition duration-200 shadow-md shadow-red-500/50 whitespace-nowrap"
@@ -79,16 +67,15 @@ export default function RootLayout() {
               🚪 로그아웃
             </button>
           ) : (
-            // 로그아웃 상태일 때: 로그인 및 회원가입 버튼 표시 (가로 정렬)
+            // ⭐️ 로그인/회원가입 그룹: 내부 div로 묶어 flex 공간 확보
             <div className="flex space-x-2 sm:space-x-3 items-center">
-              {/* 로그인 링크 */}
               <Link
                 to="/login"
-                className="text-blue-400 px-1 py-1 sm:px-3 sm:py-2 cursor-pointer text-sm font-medium hover:text-blue-300 transition duration-200 whitespace-nowrap"
+                // ⭐️ 모바일에서 패딩을 더 줄여 공간 확보 (px-2)
+                className="text-blue-400 px-2 py-1 sm:px-3 sm:py-2 cursor-pointer text-sm font-medium hover:text-blue-300 transition duration-200 whitespace-nowrap"
               >
                 로그인
               </Link>
-              {/* 회원가입 버튼: 강조 스타일 적용 */}
               <Link
                 to="/signup"
                 className="bg-blue-600 text-white px-3 py-2 rounded-lg cursor-pointer text-sm font-medium hover:bg-blue-700 transition duration-200 shadow-md shadow-blue-500/50 whitespace-nowrap"
