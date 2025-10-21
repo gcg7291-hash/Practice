@@ -38,12 +38,12 @@ export default function RootLayout() {
   };
 
   return (
-    // 전체 컨테이너: min-h-screen으로 화면 꽉 채우기, 다크 배경
+    // 전체 컨테이너
     <div className="min-h-screen bg-slate-900 text-gray-100 flex flex-col">
-      {/* ⭐️ 헤더/내비게이션 바: sticky top-0, 반응형 패딩, z-index 높여서 고정 */}
-      <header className="flex justify-between items-center bg-gray-800 border-b border-gray-700 p-3 sm:p-4 sticky top-0 z-20 shadow-lg">
-        {/* ⭐️ 네비게이션 항목 그룹: flex-wrap 대신 nowrap을 유지하며, 중요한 항목(Logo, 작성, 목록)은 항상 보이도록 배치 */}
-        <nav className="flex items-center space-x-2 sm:space-x-4">
+      {/* ⭐️ 헤더/내비게이션 바: 너비 전체 사용, 요소 간격 유지를 위한 justify-between */}
+      <header className="w-full flex justify-between items-center bg-gray-800 border-b border-gray-700 p-3 sm:p-4 sticky top-0 z-20 shadow-lg">
+        {/* ⭐️ 네비게이션 항목 그룹: 공간을 채울 수 있도록 flex-1, 그러나 최소 크기 이상으로 줄어들지 않도록 shrink-0 설정*/}
+        <nav className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
           {navItems.map((item) => {
             const isLogo = item.path === "/";
 
@@ -51,7 +51,7 @@ export default function RootLayout() {
               <NavLink
                 key={item.path}
                 to={item.path}
-                // ⭐️ whitespace-nowrap 유지하여 줄바꿈 방지
+                // whitespace-nowrap으로 줄바꿈 방지
                 className={({ isActive }) =>
                   `px-3 py-1 sm:px-4 sm:py-2 text-sm whitespace-nowrap cursor-pointer hover:text-blue-400 transition duration-200 
                   ${
@@ -68,8 +68,8 @@ export default function RootLayout() {
           })}
         </nav>
 
-        {/* ⭐️ 인증 관련 버튼 그룹: flex를 유지하여 가로 정렬 보장 */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* ⭐️ 인증 관련 버튼 그룹: 공간이 부족해도 줄어들지 않도록 shrink-0 설정 */}
+        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
           {isLoggedIn ? (
             // 로그인 상태일 때: 로그아웃 버튼 표시
             <button
