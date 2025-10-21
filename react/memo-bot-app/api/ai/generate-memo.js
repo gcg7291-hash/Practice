@@ -16,11 +16,13 @@ const responseSchema = {
   properties: {
     title: {
       type: "string",
-      description: "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다. 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
+      description:
+        "사용자의 요청에서 추출하거나 적절히 요약된 메모의 제목을 10~20자 내외로 생성합니다. 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     content: {
       type: "string",
-      description: "할 일 내용 (본문). 업무 관련 질문이 아닐 경우 '업무 관련 질문이 아닙니다'를 채웁니다.",
+      description:
+        "할 일 내용 (본문). 업무 관련 질문이 아닐 경우 '업무 관련 질문이 아닙니다'를 채웁니다.",
     },
     dueDate: {
       type: "string",
@@ -33,7 +35,8 @@ const responseSchema = {
     },
     category: {
       type: "string",
-      description: "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등). 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
+      description:
+        "할 일 종류 (예: 업무, 개인, 쇼핑, 학습 등). 업무 관련 질문이 아닐 경우 '답변 불가'를 채웁니다.",
     },
     createdAt: {
       type: "string",
@@ -77,7 +80,7 @@ function getConfig(currentDateString) {
   ].join(" ");
 
   return {
-    temperature: 0.5, 
+    temperature: 0.5,
     maxOutputTokens: 1000,
     systemInstruction: systemInstructionWithDate,
     responseMimeType: "application/json",
@@ -117,7 +120,7 @@ export default async function handler(req, res) {
         .status(400)
         .json({ error: "Message is required in request body." });
     }
-    
+
     const todayDate = new Date();
     const todayDateString = todayDate.toISOString().slice(0, 10);
 
@@ -131,21 +134,21 @@ export default async function handler(req, res) {
     });
 
     const jsonText = structuredResponse.text.trim();
-    const parsedData = JSON.parse(jsonText); 
+    const parsedData = JSON.parse(jsonText);
 
     // ⭐️ AI 응답 텍스트 결정 로직: 답변 불가 시 다른 메시지를 출력합니다.
     let aiResponseText;
-    if (parsedData.title === '답변 불가' && parsedData.content === '업무 관련 질문이 아닙니다') {
-        aiResponseText = "죄송합니다. 업무 관련 질문이 아닙니다.";
-    } else {
-        aiResponseText = `AI가 메모 정보를 추출했습니다. 저장하시겠어요? (제목: ${parsedData.title})`;
+    if (
+      parsedData.title === "답변 불가" &&
+      parsedData.content === "업무 관련 질문이 아닙니다"
+    ) {
+      aiResponseText = "죄송합니다. 업무 관련 질문이 아닙니다.";
     }
 
     return res.status(200).json({
       structuredMemo: parsedData,
       aiText: aiResponseText, // 수정된 메시지 사용
     });
-
   } catch (error) {
     console.error("서버 에러 발생:", error.message);
     if (error instanceof SyntaxError) {
