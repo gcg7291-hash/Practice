@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// ⭐️ 이 import는 이제 authSlice.js가 수정되었으므로 오류가 나지 않습니다.
-import { signup, resetIsSignup, resetError } from "../store/authSlice"; 
+import { signup, resetIsSignup, resetError } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -21,10 +20,10 @@ export default function Signup() {
     e.preventDefault();
     if (isLoading) return; // 로딩 중 중복 클릭 방지
 
-    // 비밀번호 일치 확인
+    // 비밀번호 일치 확인 (스타일링과 무관하지만 중요한 로직)
     if (password !== confirmPassword) {
       alert("비밀번호와 비밀번호 확인 값이 일치하지 않습니다.");
-      dispatch(resetError()); 
+      dispatch(resetError());
       return;
     }
 
@@ -36,7 +35,7 @@ export default function Signup() {
     if (isSignup === true) {
       alert("회원가입을 성공했습니다. 메일함을 확인해주세요.");
       dispatch(resetIsSignup());
-      navigate("/login"); // 로그인 페이지로 이동하는 것이 일반적
+      navigate("/login"); // 로그인 페이지로 이동
     }
 
     // isSignup 상태가 변경되거나 에러가 발생하면 로딩 종료
@@ -46,16 +45,20 @@ export default function Signup() {
   }, [isSignup, error, dispatch, navigate]);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="bg-gray-800 p-8 md:p-10 rounded-xl shadow-2xl w-full max-w-sm border border-gray-700">
+    // ⭐️ 전체 컨테이너: 배경색을 bg-slate-900으로 변경하여 더 세련된 다크톤 사용
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 sm:p-6">
+      {/* ⭐️ 회원가입 카드: max-w-sm으로 너비 제한, 더 큰 그림자와 둥근 모서리 */}
+      <div className="bg-gray-800 p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-sm border border-gray-700 transform transition duration-500 hover:shadow-blue-500/20">
         <div className="text-center mb-8">
-          <span className="text-4xl font-extrabold text-blue-400">Memo AI</span>
-          <h1 className="text-xl text-gray-300 mt-2">회원가입</h1>
+          {/* ⭐️ 로고/타이틀 크기 조정 */}
+          <span className="text-4xl sm:text-5xl font-extrabold text-blue-400">
+            Memo AI
+          </span>
+          <h1 className="text-xl text-gray-300 mt-2 font-light">회원가입</h1>
 
-          {/* 에러 메시지 출력 - ⭐️ API Key 오류 필터링 적용 */}
+          {/* ⭐️ 에러 메시지 출력: 애니메이션 추가 및 스타일 조정 */}
           {error && (
-            <p className="text-red-400 text-sm mt-3 p-3 rounded-lg border border-red-600 bg-gray-700/50">
-              {/* API key 오류를 사용자 친화적 메시지로 대체 */}
+            <p className="text-red-400 text-sm mt-4 p-3 rounded-lg border border-red-500 bg-gray-700/50 animate-pulse">
               {typeof error === "string" &&
               (error.includes("API key") || error.includes("No API key"))
                 ? "인증 시스템 연결에 실패했습니다. 다시 시도해 주세요."
@@ -66,10 +69,11 @@ export default function Signup() {
           )}
         </div>
 
+        {/* ⭐️ 폼: 입력 필드 간 간격 조정 */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* 이메일 입력 필드 */}
+          {/* 입력 필드 스타일 통일 및 개선 */}
           <input
-            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600"
+            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600 focus:border-blue-500"
             type="email"
             value={email}
             placeholder="이메일을 입력하세요"
@@ -79,7 +83,7 @@ export default function Signup() {
           />
           {/* 비밀번호 입력 필드 */}
           <input
-            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600"
+            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600 focus:border-blue-500"
             type="password"
             value={password}
             placeholder="비밀번호 (6자 이상)"
@@ -90,7 +94,7 @@ export default function Signup() {
           />
           {/* 비밀번호 확인 입력 필드 */}
           <input
-            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600"
+            className="w-full p-3 rounded-lg bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 border border-gray-600 focus:border-blue-500"
             type="password"
             value={confirmPassword}
             placeholder="비밀번호 확인"
@@ -98,36 +102,37 @@ export default function Signup() {
             required
             disabled={isLoading}
           />
-          {/* 회원가입 버튼 */}
+
+          {/* ⭐️ 회원가입 버튼: 로딩 상태에 따른 색상/그림자 및 애니메이션 추가 */}
           <input
-            className={`w-full text-white font-bold p-3 rounded-lg mt-6 transition duration-200 shadow-md ${
-              isLoading
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-blue-600 cursor-pointer hover:bg-blue-700 shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-            }`}
+            className={`w-full text-white font-bold p-3 rounded-lg mt-6 transition duration-300 shadow-lg 
+              ${
+                isLoading
+                  ? "bg-gray-500 cursor-not-allowed shadow-gray-700/50"
+                  : "bg-blue-600 cursor-pointer hover:bg-blue-700 shadow-blue-500/50 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transform hover:scale-[1.01]"
+              }`}
             type="submit"
             value={isLoading ? "처리 중..." : "회원가입"}
             disabled={isLoading}
           />
         </form>
 
-        {/* 로그인 링크 */}
-        <div className="mt-6 text-center">
+        {/* ⭐️ 링크 컨테이너: 간격 조정 */}
+        <div className="mt-8 text-center space-y-3">
+          {/* 로그인 링크 */}
           <Link
             to="/login"
-            className="text-gray-400 text-sm hover:text-blue-400 transition duration-200 underline"
+            className="inline-block text-gray-400 text-sm hover:text-blue-400 transition duration-200 underline hover:no-underline"
           >
             이미 계정이 있으신가요? 로그인으로 돌아가기
           </Link>
-        </div>
 
-        {/* 처음으로 링크 */}
-        <div className="mt-4 text-center">
+          {/* 처음으로 링크: 버튼 형태로 변경하여 가시성 높임 */}
           <Link
             to="/"
-            className="text-blue-400 text-sm font-semibold hover:text-blue-300 transition duration-200"
+            className="inline-block w-full px-4 py-2 bg-gray-700 text-gray-300 font-semibold rounded-lg shadow-md hover:bg-gray-600 hover:text-white transition duration-200 text-sm"
           >
-            처음으로
+            🏠 처음으로
           </Link>
         </div>
       </div>

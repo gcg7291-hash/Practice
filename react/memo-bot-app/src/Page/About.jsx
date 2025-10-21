@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
 
-export default function RootLayout() {
+export default function About() {
   const navItems = [
     { path: "/", label: "Memo AI" },
     { path: "/memo", label: "메모 작성" },
@@ -15,11 +15,13 @@ export default function RootLayout() {
     // ⭐️ 변경: flex-col을 추가하여 내부 요소를 수직으로 배치
     <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
       {/* 헤더/내비게이션 바: 어두운 배경 및 경계선 (높이는 고정) */}
-      <div className="flex justify-between items-center bg-gray-800 border-b border-gray-700 p-4 sticky top-0 z-10">
+      {/* 모바일에서는 패딩을 줄이고, md 이상에서는 늘림 */}
+      <div className="flex flex-col md:flex-row justify-between items-center bg-gray-800 border-b border-gray-700 p-2 md:p-4 sticky top-0 z-10">
         {/* 네비게이션 항목 그룹 */}
         <div className="flex items-center">
           <nav>
-            <div className="flex items-center gap-2">
+            {/* 모바일에서는 flex-wrap으로 줄바꿈 허용 */}
+            <div className="flex items-center flex-wrap gap-2">
               {navItems.map((item) => {
                 const isLogo = item.path === "/";
                 
@@ -27,9 +29,10 @@ export default function RootLayout() {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    // 모바일에서 폰트 크기 조정
                     className={({ isActive }) =>
-                      `px-4 py-2 text-sm cursor-pointer hover:text-blue-400 transition duration-200 
-                      ${isLogo ? "text-blue-400 font-extrabold text-xl" : "text-gray-300"} 
+                      `px-3 md:px-4 py-2 text-xs md:text-sm cursor-pointer hover:text-blue-400 transition duration-200 
+                      ${isLogo ? "text-blue-400 font-extrabold text-lg md:text-xl" : "text-gray-300"} 
                       ${isActive ? activeNavItemClass : ""}`
                     }
                   >
@@ -42,16 +45,17 @@ export default function RootLayout() {
         </div>
 
         {/* 로그인, 회원가입은 맨 오른쪽으로 배치 */}
-        <div className="flex items-center gap-2">
+        {/* 모바일에서 버튼 크기 조정 */}
+        <div className="flex items-center gap-2 mt-2 md:mt-0">
           <a
-            className="text-blue-400 px-3 py-2 cursor-pointer text-sm hover:text-blue-300 transition duration-200"
+            className="text-blue-400 px-2 md:px-3 py-1 md:py-2 cursor-pointer text-xs md:text-sm hover:text-blue-300 transition duration-200"
             href="/login"
             data-discover="true"
           >
             로그인
           </a>
           <a
-            className="bg-blue-600 text-white px-3 py-2 rounded-lg cursor-pointer text-sm font-medium hover:bg-blue-500 transition duration-200"
+            className="bg-blue-600 text-white px-2 md:px-3 py-1 md:py-2 rounded-lg cursor-pointer text-xs md:text-sm font-medium hover:bg-blue-500 transition duration-200"
             href="/signup"
             data-discover="true"
           >
@@ -61,7 +65,7 @@ export default function RootLayout() {
       </div>
       
       {/* 메인 콘텐츠 영역: ⭐️ 변경: flex-1을 사용하여 남은 모든 공간을 채움 */}
-      <div className="flex-1 flex justify-center overflow-y-auto">
+      <div className="flex-1 flex justify-center overflow-y-auto p-2 md:p-4">
         <div className="w-full max-w-6xl h-full flex flex-col">
           <Outlet />
         </div>

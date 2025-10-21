@@ -1,5 +1,3 @@
-// 📁 src/pages/Memo.jsx (메모 카드 표시 로직 수정)
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -10,49 +8,70 @@ import MessageList from "../components/MessageList";
 import ChatForm from "../components/ChatForm";
 import { addMemo } from "../utils/memoStorage"; // 메모 저장 유틸리티
 
-// ⭐️ 메모 확인 UI 컴포넌트
-const MemoConfirmation = ({ structuredMemo, onSave, onCancel }) => (
-  <div className="bg-blue-900/50 p-4 rounded-xl max-w-xl self-start mb-4 shadow-lg border border-blue-800">
-    <h3 className="text-lg font-bold text-blue-300 mb-3">
-      AI가 메모를 작성했습니다. 저장하시겠어요?
-    </h3>
-    <div className="space-y-2 text-gray-200 text-sm">
-      <p>
-        <strong className="text-blue-200">제목:</strong> {structuredMemo.title}
-      </p>
-      <p>
-        <strong className="text-blue-200">내용:</strong>
-        {structuredMemo.content}
-      </p>
-      <p>
-        <strong className="text-blue-200">마감일:</strong>
-        {structuredMemo.dueDate}
-      </p>
-      <p>
-        <strong className="text-blue-200">중요도:</strong>
-        {structuredMemo.priority}
-      </p>
-      <p>
-        <strong className="text-blue-200">카테고리:</strong>
-        {structuredMemo.category}
-      </p>
+// (MemoConfirmation 컴포넌트는 위에 정의된 코드를 그대로 사용하세요.)
+const MemoConfirmation = ({ structuredMemo, onSave, onCancel }) => {
+  // ... (위의 MemoConfirmation 코드)
+  const getPriorityColor = (priority) => {
+    switch (priority.toLowerCase()) {
+      case "높음":
+      case "high":
+        return "text-red-400 font-bold";
+      case "중간":
+      case "medium":
+        return "text-yellow-400 font-bold";
+      case "낮음":
+      case "low":
+        return "text-green-400";
+      default:
+        return "text-gray-400";
+    }
+  };
+
+  return (
+    <div className="bg-blue-900/40 p-5 rounded-xl max-w-lg w-full self-end ml-auto mr-0 mt-4 shadow-xl border border-blue-700 animate-fadeIn">
+      <h3 className="text-xl font-bold text-blue-300 mb-4 flex items-center">
+        ✨ AI 메모 초안이 완성되었습니다!
+      </h3>
+      <div className="space-y-3 text-gray-200 text-sm border-t border-blue-700 pt-4">
+        <p className="flex justify-between items-start">
+          <strong className="text-blue-200 min-w-[70px]">제목</strong>
+          <span className="text-right flex-1">{structuredMemo.title}</span>
+        </p>
+        <p className="flex justify-between items-start">
+          <strong className="text-blue-200 min-w-[70px]">내용</strong>
+          <span className="text-right flex-1 break-words">{structuredMemo.content}</span>
+        </p>
+        <p className="flex justify-between items-center">
+          <strong className="text-blue-200 min-w-[70px]">마감일</strong>
+          <span className="text-right">{structuredMemo.dueDate}</span>
+        </p>
+        <p className="flex justify-between items-center">
+          <strong className="text-blue-200 min-w-[70px]">중요도</strong>
+          <span className={`text-right ${getPriorityColor(structuredMemo.priority)}`}>{structuredMemo.priority}</span>
+        </p>
+        <p className="flex justify-between items-center">
+          <strong className="text-blue-200 min-w-[70px]">카테고리</strong>
+          <span className="text-right">{structuredMemo.category}</span>
+        </p>
+      </div>
+      <div className="flex justify-end gap-3 mt-5 pt-4 border-t border-blue-700">
+        <button
+          onClick={onSave}
+          className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition duration-200 shadow-md transform hover:scale-[1.03]"
+        >
+          ✔️ 메모 저장
+        </button>
+        <button
+          onClick={onCancel}
+          className="bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-500 transition duration-200 shadow-md"
+        >
+          ❌ 취소
+        </button>
+      </div>
     </div>
-    <div className="flex justify-end gap-3 mt-4 pt-3 border-t border-blue-800">
-      <button
-        onClick={onSave}
-        className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition duration-200 shadow-md"
-      >
-        ✔️ 메모 저장
-      </button>
-      <button
-        onClick={onCancel}
-        className="bg-gray-600 text-gray-200 font-semibold px-4 py-2 rounded-lg text-sm hover:bg-gray-500 transition duration-200 shadow-md"
-      >
-        ❌ 취소
-      </button>
-    </div>
-  </div>
-);
+  );
+};
+// --------------------------------------------------------------------------------
 
 export default function Memo() {
   const [prompt, setPrompt] = useState("");
@@ -69,7 +88,7 @@ export default function Memo() {
     }
   }, [token, navigate]);
 
-  // 폼 제출 핸들러
+  // 폼 제출 핸들러 (이하 로직은 변경 없음)
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -87,7 +106,6 @@ export default function Memo() {
     setIsLoading(false);
   }
 
-  // 핵심 로직: 서버리스 함수를 호출하여 AI 응답을 받음
   async function generateAiContent(currentPrompt) {
     const apiUrl = `/api/ai/generate-memo`;
 
@@ -98,7 +116,6 @@ export default function Memo() {
 
       const { structuredMemo: parsedData, aiText } = response.data;
 
-      // 1. 구조화된 메모 상태 업데이트 (메모 확인 UI 표시)
       setStructuredMemo({
         title: parsedData.title,
         content: parsedData.content,
@@ -110,7 +127,6 @@ export default function Memo() {
         toDay: parsedData.toDay || new Date().toISOString().slice(0, 10),
       });
 
-      // 2. 일반 텍스트 응답을 메시지 목록에 추가 (대화 내용)
       setMessages((prev) => [...prev, { role: "ai", content: aiText }]);
     } catch (error) {
       console.error("AI 응답 생성 오류:", error); 
@@ -129,7 +145,6 @@ export default function Memo() {
     }
   }
 
-  // 메모 저장 핸들러
   const handleCreateMemo = () => {
     if (structuredMemo) {
       addMemo(structuredMemo);
@@ -144,7 +159,6 @@ export default function Memo() {
     }
   };
 
-  // 메모 취소 핸들러
   const handleCancelMemo = () => {
     setMessages((prev) => [
       ...prev,
@@ -157,14 +171,16 @@ export default function Memo() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-2xl flex flex-col h-full md:h-[600px] bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
-        {/* 메시지 목록 및 메모 확인 UI */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 rounded-t-xl">
-          {/* 기존 메시지 목록 렌더링 */}
+    // ⭐️ 전체 컨테이너: 모바일에서는 꽉 채우고(h-full), PC에서는 최대 너비와 높이를 제한합니다.
+    <div className="min-h-screen bg-slate-900 text-gray-100 flex flex-col items-center justify-center p-4">
+      {/* ⭐️ 채팅 박스: 모바일에서는 h-full, PC에서는 고정 높이 h-[600px] */}
+      <div className="w-full max-w-3xl flex flex-col h-[calc(100vh-2rem)] md:h-[650px] bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+        
+        {/* 메시지 목록 영역 */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 rounded-t-xl space-y-4">
           <MessageList messages={messages} />
           
-          {/* ⭐️ 핵심 수정: title이 '답변 불가'가 아닐 때만 메모 확인 카드를 표시 */}
+          {/* 메모 확인 UI */}
           {structuredMemo && structuredMemo.title !== '답변 불가' && (
             <MemoConfirmation
               structuredMemo={structuredMemo}
@@ -174,8 +190,8 @@ export default function Memo() {
           )}
         </div>
         
-        {/* 채팅 입력 폼 */}
-        <div className="p-4 bg-gray-700/50 border-t border-gray-700 rounded-b-xl">
+        {/* 채팅 입력 폼 영역 */}
+        <div className="p-4 bg-gray-700/70 border-t border-gray-700 rounded-b-xl shadow-inner shadow-gray-900/50">
           <ChatForm
             prompt={prompt}
             setPrompt={setPrompt}
