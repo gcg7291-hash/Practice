@@ -18,10 +18,10 @@ try {
 // 숫자를 인자로 받아 짝수라면 true, 홀수라면 false를 반환하는 함수를 작성한다
 // 함수명: isEven
 // 반환값: 매개변수가 짝수라면 true, 홀수라면 false
-function isEven(number) {
-  if (number % 2 === 0) {
+function isEven(n) {
+  if (n % 2 === 0) {
     return true;
-  } else if (number % 2 === 1) {
+  } else if (n % 2 === 1) {
     return false;
   }
 }
